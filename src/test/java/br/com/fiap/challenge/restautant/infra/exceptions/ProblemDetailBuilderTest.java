@@ -4,12 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.URI;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ProblemDetail;
 
 class ProblemDetailBuilderTest {
 
     @Test
+    @DisplayName("Should build ProblemDetail with all fields set")
     void shouldBuildProblemDetailWithAllFields() {
         URI type = URI.create("http://example.com/error");
         String title = "Validation Error";
@@ -35,6 +37,7 @@ class ProblemDetailBuilderTest {
     }
 
     @Test
+    @DisplayName("Should build ProblemDetail with default status")
     void shouldBuildProblemDetailWithDefaultStatus() {
         ProblemDetail pd = ProblemDetailBuilder.builder().build();
 
@@ -42,6 +45,7 @@ class ProblemDetailBuilderTest {
     }
 
     @Test
+    @DisplayName("Should chain methods correctly")
     void shouldChainMethodsCorrectly() {
         ProblemDetail pd = ProblemDetailBuilder.builder()
             .title("Error")

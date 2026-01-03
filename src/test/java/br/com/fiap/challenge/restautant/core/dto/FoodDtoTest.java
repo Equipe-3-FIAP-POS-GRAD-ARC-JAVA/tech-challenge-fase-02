@@ -4,11 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.UUID;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class FoodDtoTest {
 
     @Test
+    @DisplayName("Should create FoodDto with all fields")
     void shouldCreateFoodDtoWithAllFields() {
         UUID menuId = UUID.randomUUID();
         UUID foodId = UUID.randomUUID();

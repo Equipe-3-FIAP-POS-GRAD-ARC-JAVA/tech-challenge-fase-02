@@ -5,11 +5,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.UUID;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class MenuDtoTest {
 
     @Test
+    @DisplayName("Should create MenuDto with all fields")
     void shouldCreateMenuDtoWithAllFields() {
         UUID menuId = UUID.randomUUID();
         UUID restaurantId = UUID.randomUUID();
