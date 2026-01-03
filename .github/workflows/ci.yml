@@ -36,6 +36,6 @@ jobs:
         cache: maven
 
     - name: Run tests
-      run: ./mvnw test
+      run: ./mvnw test -Dmaven.surefire.parallel=classes -Dmaven.surefire.threadCount=2 -Dmaven.surefire.useFile=false -Dmaven.surefire.printSummary=true
       env:
         SPRING_PROFILES_ACTIVE: test
