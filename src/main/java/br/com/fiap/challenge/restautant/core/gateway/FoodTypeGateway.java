@@ -3,17 +3,18 @@ package br.com.fiap.challenge.restautant.core.gateway;
 import java.util.List;
 import java.util.UUID;
 
+import br.com.fiap.challenge.restautant.core.dto.FoodTypeDto;
 import br.com.fiap.challenge.restautant.core.dto.FoodTypeInput;
 
 public interface FoodTypeGateway {
 
-    List<FoodTypeInput> getAllFoodTypes();
-    FoodTypeInput getFoodTypeById(UUID foodTypeId);
+    List<FoodTypeDto> getAllFoodTypes();
+    FoodTypeDto getFoodTypeById(UUID foodTypeId);
 
 
-    FoodTypeInput createFoodType(FoodTypeInput foodType);
+    FoodTypeDto createFoodType(FoodTypeInput foodType);
 
-    FoodTypeInput updateFoodType(FoodTypeInput foodType);
+    FoodTypeDto updateFoodType(FoodTypeInput foodType);
 
     void deleteFoodType(UUID foodTypeId);
 
