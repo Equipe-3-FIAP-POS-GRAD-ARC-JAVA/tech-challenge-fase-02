@@ -1,7 +1,13 @@
 package br.com.fiap.challenge.restautant.infra.entity;
 
-import jakarta.persistence.*;
 import java.math.BigDecimal;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "foods")
@@ -14,7 +20,7 @@ public class Food extends BaseEntity {
     @JoinColumn(name = "food_type_id")
     private FoodType foodType;
 
-    @Column(precision = 10, scale = 2)
+    @Column(scale = 2)
     private BigDecimal price;
 
     @Column(name = "image_url")
