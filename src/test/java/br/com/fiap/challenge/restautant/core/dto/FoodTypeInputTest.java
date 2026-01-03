@@ -1,0 +1,17 @@
+package br.com.fiap.challenge.restautant.core.dto;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
+
+class FoodTypeInputTest {
+
+    @Test
+    void shouldCreateFoodTypeInputWithAllFields() {
+        String typeFood = "Mexican";
+
+        FoodTypeInput input = new FoodTypeInput(null, typeFood);
+
+        assertThat(input.typeFood()).isEqualTo(typeFood);
+    }
+}
