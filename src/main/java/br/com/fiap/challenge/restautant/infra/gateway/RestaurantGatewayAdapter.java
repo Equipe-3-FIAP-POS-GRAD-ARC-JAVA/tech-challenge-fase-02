@@ -2,33 +2,39 @@ package br.com.fiap.challenge.restautant.infra.gateway;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import br.com.fiap.challenge.restautant.core.dto.FoodDto;
+import br.com.fiap.challenge.restautant.core.dto.MenuDto;
 import br.com.fiap.challenge.restautant.core.dto.RestaurantDto;
 import br.com.fiap.challenge.restautant.core.dto.RestaurantInput;
 import br.com.fiap.challenge.restautant.core.gateway.RestaurantGateway;
 import br.com.fiap.challenge.restautant.infra.entity.Address;
+import br.com.fiap.challenge.restautant.infra.entity.Food;
+import br.com.fiap.challenge.restautant.infra.entity.Menu;
 import br.com.fiap.challenge.restautant.infra.entity.Restaurant;
 import br.com.fiap.challenge.restautant.infra.entity.State;
 import br.com.fiap.challenge.restautant.infra.entity.ZipCode;
+import br.com.fiap.challenge.restautant.infra.repository.FoodTypeRepository;
 import br.com.fiap.challenge.restautant.infra.repository.RestaurantRepository;
 
 @Component
 public class RestaurantGatewayAdapter implements RestaurantGateway {
 
     private final RestaurantRepository restaurantRepository;
+    private final FoodTypeRepository foodTypeRepository;
 
-    public RestaurantGatewayAdapter(RestaurantRepository restaurantRepository) {
+    public RestaurantGatewayAdapter(RestaurantRepository restaurantRepository, FoodTypeRepository foodTypeRepository) {
         this.restaurantRepository = restaurantRepository;
+        this.foodTypeRepository = foodTypeRepository;
     }
 
     @Override
     public List<RestaurantDto> getAllRestaurants() {
         return restaurantRepository.findAll().stream()
                 .map(this::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -80,12 +86,40 @@ public class RestaurantGatewayAdapter implements RestaurantGateway {
 
     @Override
     public List<String> getTypesFoods() {
-        // TODO: implement if needed
-        return List.of();
+        return foodTypeRepository.findAll().stream()
+                .map(foodType -> foodType.getTypeFood())
+                .toList();
     }
 
     private RestaurantDto toDto(Restaurant entity) {
-        // Note: RestaurantDto expects MenuDto, but entity has no menu. Adjust as needed.
-        return new RestaurantDto(entity.getId(), entity.getName(), null);
+        List<MenuDto> menuDtos = entity.getMenus() != null
+            ? entity.getMenus().stream()
+                .map(this::menuToDto)
+                .toList()
+            : List.of();
+        
+        return new RestaurantDto(entity.getId(), entity.getName(), menuDtos);
+    }
+
+    private MenuDto menuToDto(Menu menu) {
+        List<FoodDto> foodDtos = menu.getFoods() != null
+            ? menu.getFoods().stream()
+                .map(this::foodToDto)
+                .toList()
+            : List.of();
+        
+        return new MenuDto(menu.getId(), menu.getRestaurant().getId(), foodDtos);
+    }
+
+    private FoodDto foodToDto(Food food) {
+        return new FoodDto(
+            food.getMenu().getId(),
+            food.getId(),
+            food.getName(),
+            food.getDescription(),
+            food.getFoodType().getId(),
+            food.getPrice().doubleValue(),
+            food.getImageUrl()
+        );
     }
 }

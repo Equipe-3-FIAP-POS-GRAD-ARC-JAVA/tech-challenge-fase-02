@@ -6,9 +6,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import br.com.fiap.challenge.restautant.core.dto.FoodDto;
 import br.com.fiap.challenge.restautant.core.dto.MenuDto;
 import br.com.fiap.challenge.restautant.core.dto.MenuInput;
 import br.com.fiap.challenge.restautant.core.gateway.MenuGateway;
+import br.com.fiap.challenge.restautant.infra.entity.Food;
 import br.com.fiap.challenge.restautant.infra.entity.Menu;
 import br.com.fiap.challenge.restautant.infra.entity.Restaurant;
 import br.com.fiap.challenge.restautant.infra.repository.MenuRepository;
@@ -72,6 +74,24 @@ public class MenuGatewayAdapter implements MenuGateway {
     }
 
     private MenuDto toDto(Menu entity) {
-        return new MenuDto(entity.getId(), entity.getRestaurant().getId(), null); // foods not included
+        List<FoodDto> foodDtos = entity.getFoods() != null 
+            ? entity.getFoods().stream()
+                .map(this::foodToDto)
+                .collect(Collectors.toList())
+            : List.of();
+        
+        return new MenuDto(entity.getId(), entity.getRestaurant().getId(), foodDtos);
+    }
+
+    private FoodDto foodToDto(Food food) {
+        return new FoodDto(
+            food.getMenu().getId(),
+            food.getId(),
+            food.getName(),
+            food.getDescription(),
+            food.getFoodType().getId(),
+            food.getPrice().doubleValue(),
+            food.getImageUrl()
+        );
     }
 }
