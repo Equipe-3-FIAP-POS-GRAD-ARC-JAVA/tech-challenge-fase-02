@@ -8,8 +8,10 @@ import br.com.fiap.challenge.restautant.core.usecase.menu.CreateMenu;
 import br.com.fiap.challenge.restautant.core.usecase.menu.CreateMenuImpl;
 import br.com.fiap.challenge.restautant.core.usecase.menu.DeleteMenu;
 import br.com.fiap.challenge.restautant.core.usecase.menu.DeleteMenuImpl;
+import br.com.fiap.challenge.restautant.core.usecase.menu.ListAllMenu;
 import br.com.fiap.challenge.restautant.core.usecase.menu.ListAllMenuByRestaurant;
 import br.com.fiap.challenge.restautant.core.usecase.menu.ListAllMenuByRestaurantImpl;
+import br.com.fiap.challenge.restautant.core.usecase.menu.ListAllMenuImpl;
 import br.com.fiap.challenge.restautant.core.usecase.menu.ListMenuById;
 import br.com.fiap.challenge.restautant.core.usecase.menu.ListMenuByIdImpl;
 import br.com.fiap.challenge.restautant.core.usecase.menu.UpdateMenu;
@@ -26,6 +28,11 @@ public class UseCaseMenuConfig {
     @Bean
     public DeleteMenu deleteMenu(MenuGateway menuGateway) {
         return new DeleteMenuImpl(menuGateway);
+    }
+
+    @Bean
+    public ListAllMenu listAllMenu(MenuGateway menuGateway) {
+        return new ListAllMenuImpl(menuGateway);
     }
 
     @Bean

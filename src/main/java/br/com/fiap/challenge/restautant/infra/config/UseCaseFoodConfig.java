@@ -8,8 +8,10 @@ import br.com.fiap.challenge.restautant.core.usecase.food.CreatedFood;
 import br.com.fiap.challenge.restautant.core.usecase.food.CreatedFoodImpl;
 import br.com.fiap.challenge.restautant.core.usecase.food.DeleteFood;
 import br.com.fiap.challenge.restautant.core.usecase.food.DeleteFoodImpl;
+import br.com.fiap.challenge.restautant.core.usecase.food.ListAllFood;
 import br.com.fiap.challenge.restautant.core.usecase.food.ListAllFoodByMenu;
 import br.com.fiap.challenge.restautant.core.usecase.food.ListAllFoodByMenuImpl;
+import br.com.fiap.challenge.restautant.core.usecase.food.ListAllFoodImpl;
 import br.com.fiap.challenge.restautant.core.usecase.food.ListFoodById;
 import br.com.fiap.challenge.restautant.core.usecase.food.ListFoodByIdImpl;
 import br.com.fiap.challenge.restautant.core.usecase.food.UpdateFood;
@@ -21,6 +23,11 @@ public class UseCaseFoodConfig {
     @Bean
     public CreatedFood createdFood(FoodGateway foodGateway) {
         return new CreatedFoodImpl(foodGateway);
+    }
+
+    @Bean
+    public ListAllFood listAllFood(FoodGateway foodGateway) {
+        return new ListAllFoodImpl(foodGateway);
     }
 
     @Bean
