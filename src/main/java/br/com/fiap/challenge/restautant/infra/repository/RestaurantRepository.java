@@ -1,10 +1,11 @@
 package br.com.fiap.challenge.restautant.infra.repository;
 
-import br.com.fiap.challenge.restautant.infra.entity.Restaurant;
+import java.util.UUID;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
+import br.com.fiap.challenge.restautant.infra.entity.Restaurant;
 
 @Repository
 public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
