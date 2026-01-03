@@ -65,7 +65,7 @@ Essa fase expande o sistema ao incluir a gestão dos tipos de usuários, cadastr
 - Vídeo de aproximadamente 5 minutos apresentando as funcionalidades e o projeto em execução.
 
 ### Commit Message Guidelines
-Sempre gere mensagens de commit em inglês seguindo a especificação Conventional Commits:
+Sempre gere mensagens de commit em inglês e comitar os arquivos em grupos lógicos seguindo a especificação Conventional Commits:
 
 **Formato**
 ```
