@@ -1,14 +1,27 @@
 package br.com.fiap.challenge.restautant.infra.web.controller;
 
-import br.com.fiap.challenge.restautant.core.dto.FoodDto;
-import br.com.fiap.challenge.restautant.core.dto.FoodInput;
-import br.com.fiap.challenge.restautant.core.usecase.food.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.fiap.challenge.restautant.core.dto.FoodDto;
+import br.com.fiap.challenge.restautant.core.dto.FoodInput;
+import br.com.fiap.challenge.restautant.core.usecase.food.CreatedFood;
+import br.com.fiap.challenge.restautant.core.usecase.food.DeleteFood;
+import br.com.fiap.challenge.restautant.core.usecase.food.ListAllFood;
+import br.com.fiap.challenge.restautant.core.usecase.food.ListAllFoodByMenu;
+import br.com.fiap.challenge.restautant.core.usecase.food.ListFoodById;
+import br.com.fiap.challenge.restautant.core.usecase.food.UpdateFood;
 
 @RestController
 @RequestMapping("/api/foods")
@@ -57,8 +70,8 @@ public class FoodController {
 
     @PutMapping("/{id}")
     public ResponseEntity<FoodDto> update(@PathVariable UUID id, @RequestBody FoodInput input) {
-        FoodInput updatedInput = new FoodInput(id, input.name(), input.description(), input.foodTypeId(),
-                input.price(), input.imageUrl(), input.menuId());
+        FoodInput updatedInput = new FoodInput(id, input.menuId(), input.name(), input.description(), input.foodTypeId(),
+                input.price(), input.imageURL());
         FoodDto result = updateFood.execute(updatedInput);
         return ResponseEntity.ok(result);
     }

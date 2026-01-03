@@ -1,14 +1,26 @@
 package br.com.fiap.challenge.restautant.infra.web.controller;
 
-import br.com.fiap.challenge.restautant.core.dto.FoodTypeDto;
-import br.com.fiap.challenge.restautant.core.dto.FoodTypeInput;
-import br.com.fiap.challenge.restautant.core.usecase.foodType.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.fiap.challenge.restautant.core.dto.FoodTypeDto;
+import br.com.fiap.challenge.restautant.core.dto.FoodTypeInput;
+import br.com.fiap.challenge.restautant.core.usecase.foodType.CreateFoodType;
+import br.com.fiap.challenge.restautant.core.usecase.foodType.DeleteFoodType;
+import br.com.fiap.challenge.restautant.core.usecase.foodType.ListAllFoodType;
+import br.com.fiap.challenge.restautant.core.usecase.foodType.ListFoodTypeById;
+import br.com.fiap.challenge.restautant.core.usecase.foodType.UpdateFoodType;
 
 @RestController
 @RequestMapping("/api/food-types")
@@ -50,7 +62,7 @@ public class FoodTypeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<FoodTypeDto> update(@PathVariable UUID id, @RequestBody FoodTypeInput input) {
-        FoodTypeInput updatedInput = new FoodTypeInput(id, input.name());
+        FoodTypeInput updatedInput = new FoodTypeInput(id, input.typeFood());
         FoodTypeDto result = updateFoodType.execute(updatedInput);
         return ResponseEntity.ok(result);
     }
