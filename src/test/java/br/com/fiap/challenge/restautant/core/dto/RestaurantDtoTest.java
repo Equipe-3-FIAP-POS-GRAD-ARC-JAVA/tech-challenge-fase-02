@@ -19,11 +19,12 @@ class RestaurantDtoTest {
         UUID restaurantIdForMenu = UUID.randomUUID();
         FoodDto food = new FoodDto(UUID.randomUUID(), UUID.randomUUID(), "Risotto", "Creamy risotto", UUID.randomUUID(), 18.00, "http://image5.com");
         MenuDto menu = new MenuDto(menuId, restaurantIdForMenu, List.of(food));
+        List<MenuDto> menus = List.of(menu);
 
-        RestaurantDto dto = new RestaurantDto(restaurantId, name, menu);
+        RestaurantDto dto = new RestaurantDto(restaurantId, name, menus);
 
         assertThat(dto.restaurantId()).isEqualTo(restaurantId);
         assertThat(dto.name()).isEqualTo(name);
-        assertThat(dto.menu()).isEqualTo(menu);
+        assertThat(dto.menus()).isEqualTo(menus);
     }
 }

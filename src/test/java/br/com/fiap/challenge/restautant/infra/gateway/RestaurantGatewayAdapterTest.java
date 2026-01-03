@@ -1,26 +1,29 @@
 package br.com.fiap.challenge.restautant.infra.gateway;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import static org.mockito.ArgumentMatchers.any;
 import org.mockito.Mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.com.fiap.challenge.restautant.core.dto.AddressInput;
 import br.com.fiap.challenge.restautant.core.dto.RestaurantDto;
 import br.com.fiap.challenge.restautant.core.dto.RestaurantInput;
 import br.com.fiap.challenge.restautant.infra.entity.Address;
+import br.com.fiap.challenge.restautant.infra.entity.FoodType;
 import br.com.fiap.challenge.restautant.infra.entity.Restaurant;
 import br.com.fiap.challenge.restautant.infra.entity.State;
 import br.com.fiap.challenge.restautant.infra.entity.ZipCode;
+import br.com.fiap.challenge.restautant.infra.repository.FoodTypeRepository;
 import br.com.fiap.challenge.restautant.infra.repository.RestaurantRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,11 +32,14 @@ class RestaurantGatewayAdapterTest {
     @Mock
     private RestaurantRepository restaurantRepository;
 
+    @Mock
+    private FoodTypeRepository foodTypeRepository;
+
     private RestaurantGatewayAdapter gateway;
 
     @BeforeEach
     void setUp() {
-        gateway = new RestaurantGatewayAdapter(restaurantRepository);
+        gateway = new RestaurantGatewayAdapter(restaurantRepository, foodTypeRepository);
     }
 
     @Test
@@ -124,5 +130,21 @@ class RestaurantGatewayAdapterTest {
         gateway.deleteRestaurant(restaurantId);
 
         verify(restaurantRepository).deleteById(restaurantId);
+    }
+
+    @Test
+    void shouldGetTypesFoods() {
+        FoodType type1 = new FoodType("Italian");
+        type1.setId(UUID.randomUUID());
+        FoodType type2 = new FoodType("Brazilian");
+        type2.setId(UUID.randomUUID());
+
+        when(foodTypeRepository.findAll()).thenReturn(List.of(type1, type2));
+
+        List<String> result = gateway.getTypesFoods();
+
+        assertThat(result).hasSize(2);
+        assertThat(result).contains("Italian", "Brazilian");
+        verify(foodTypeRepository).findAll();
     }
 }

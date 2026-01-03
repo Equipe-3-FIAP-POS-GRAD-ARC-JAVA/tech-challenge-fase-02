@@ -18,7 +18,6 @@ import br.com.fiap.challenge.restautant.core.dto.FoodDto;
 import br.com.fiap.challenge.restautant.core.dto.MenuDto;
 import br.com.fiap.challenge.restautant.core.dto.RestaurantDto;
 import br.com.fiap.challenge.restautant.core.dto.RestaurantInput;
-import br.com.fiap.challenge.restautant.core.dto.AddressInput;
 import br.com.fiap.challenge.restautant.core.gateway.RestaurantGateway;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,7 +44,8 @@ class UpdateRestaurantImplTest {
         UUID menuId = UUID.randomUUID();
         List<FoodDto> foods = List.of();
         MenuDto menu = new MenuDto(menuId, id, foods);
-        RestaurantDto expected = new RestaurantDto(id, name, menu);
+        List<MenuDto> menus = List.of(menu);
+        RestaurantDto expected = new RestaurantDto(id, name, menus);
 
         when(restaurantGateway.updateRestaurant(input)).thenReturn(expected);
 
