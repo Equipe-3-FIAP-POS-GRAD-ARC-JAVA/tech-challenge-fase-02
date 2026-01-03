@@ -1,6 +1,8 @@
 package br.com.fiap.challenge.restautant.core.dto;
 
-public record RestaurantInput(String name, AddressInput address) {
+import java.util.UUID;
+
+public record RestaurantInput(UUID id, String name, AddressInput address) {
 
 }
 
