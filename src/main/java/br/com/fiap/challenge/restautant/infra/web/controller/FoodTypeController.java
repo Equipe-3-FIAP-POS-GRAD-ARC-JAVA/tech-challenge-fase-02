@@ -21,10 +21,11 @@ import br.com.fiap.challenge.restautant.core.usecase.foodType.DeleteFoodType;
 import br.com.fiap.challenge.restautant.core.usecase.foodType.ListAllFoodType;
 import br.com.fiap.challenge.restautant.core.usecase.foodType.ListFoodTypeById;
 import br.com.fiap.challenge.restautant.core.usecase.foodType.UpdateFoodType;
+import br.com.fiap.challenge.restautant.infra.web.api.FoodTypeAPI;
 
 @RestController
 @RequestMapping("/api/food-types")
-public class FoodTypeController {
+public class FoodTypeController implements FoodTypeAPI {
 
     private final CreateFoodType createFoodType;
     private final ListAllFoodType listAllFoodType;

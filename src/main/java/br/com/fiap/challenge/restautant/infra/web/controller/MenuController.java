@@ -3,6 +3,7 @@ package br.com.fiap.challenge.restautant.infra.web.controller;
 import br.com.fiap.challenge.restautant.core.dto.MenuDto;
 import br.com.fiap.challenge.restautant.core.dto.MenuInput;
 import br.com.fiap.challenge.restautant.core.usecase.menu.*;
+import br.com.fiap.challenge.restautant.infra.web.api.MenuAPI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/menus")
-public class MenuController {
+public class MenuController implements MenuAPI {
 
     private final CreateMenu createMenu;
     private final ListAllMenu listAllMenu;

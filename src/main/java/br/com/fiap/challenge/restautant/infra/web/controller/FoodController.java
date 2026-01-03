@@ -22,10 +22,11 @@ import br.com.fiap.challenge.restautant.core.usecase.food.ListAllFood;
 import br.com.fiap.challenge.restautant.core.usecase.food.ListAllFoodByMenu;
 import br.com.fiap.challenge.restautant.core.usecase.food.ListFoodById;
 import br.com.fiap.challenge.restautant.core.usecase.food.UpdateFood;
+import br.com.fiap.challenge.restautant.infra.web.api.FoodAPI;
 
 @RestController
 @RequestMapping("/api/foods")
-public class FoodController {
+public class FoodController implements FoodAPI {
 
     private final CreatedFood createdFood;
     private final ListAllFood listAllFood;

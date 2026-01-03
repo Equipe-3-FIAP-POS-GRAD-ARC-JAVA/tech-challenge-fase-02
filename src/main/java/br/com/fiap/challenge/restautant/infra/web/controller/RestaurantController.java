@@ -3,6 +3,7 @@ package br.com.fiap.challenge.restautant.infra.web.controller;
 import br.com.fiap.challenge.restautant.core.dto.RestaurantDto;
 import br.com.fiap.challenge.restautant.core.dto.RestaurantInput;
 import br.com.fiap.challenge.restautant.core.usecase.restaurant.*;
+import br.com.fiap.challenge.restautant.infra.web.api.RestaurantAPI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/restaurants")
-public class RestaurantController {
+public class RestaurantController implements RestaurantAPI {
 
     private final CreateRestaurant createRestaurant;
     private final ListAllRestaurant listAllRestaurant;
