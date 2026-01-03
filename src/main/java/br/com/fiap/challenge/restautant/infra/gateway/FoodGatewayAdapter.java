@@ -1,5 +1,12 @@
 package br.com.fiap.challenge.restautant.infra.gateway;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
 import br.com.fiap.challenge.restautant.core.dto.FoodDto;
 import br.com.fiap.challenge.restautant.core.dto.FoodInput;
 import br.com.fiap.challenge.restautant.core.gateway.FoodGateway;
@@ -9,12 +16,6 @@ import br.com.fiap.challenge.restautant.infra.entity.Menu;
 import br.com.fiap.challenge.restautant.infra.repository.FoodRepository;
 import br.com.fiap.challenge.restautant.infra.repository.FoodTypeRepository;
 import br.com.fiap.challenge.restautant.infra.repository.MenuRepository;
-import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 public class FoodGatewayAdapter implements FoodGateway {
@@ -57,7 +58,7 @@ public class FoodGatewayAdapter implements FoodGateway {
         FoodType foodType = foodTypeRepository.findById(foodInput.foodTypeId())
                 .orElseThrow(() -> new RuntimeException("FoodType not found"));
         Food entity = new Food(foodInput.name(), foodInput.description(), foodType,
-                BigDecimal.valueOf(foodInput.price()), foodInput.imageUrl(), menu);
+                BigDecimal.valueOf(foodInput.price()), foodInput.imageURL(), menu);
         Food saved = foodRepository.save(entity);
         return toDto(saved);
     }
@@ -72,7 +73,7 @@ public class FoodGatewayAdapter implements FoodGateway {
                 .orElseThrow(() -> new RuntimeException("FoodType not found"));
         entity.setFoodType(foodType);
         entity.setPrice(BigDecimal.valueOf(foodInput.price()));
-        entity.setImageUrl(foodInput.imageUrl());
+        entity.setImageUrl(foodInput.imageURL());
         Menu menu = menuRepository.findById(foodInput.menuId())
                 .orElseThrow(() -> new RuntimeException("Menu not found"));
         entity.setMenu(menu);
@@ -86,8 +87,7 @@ public class FoodGatewayAdapter implements FoodGateway {
     }
 
     private FoodDto toDto(Food entity) {
-        return new FoodDto(entity.getId(), entity.getName(), entity.getDescription(),
-                entity.getFoodType().getId(), entity.getPrice().doubleValue(),
-                entity.getImageUrl(), entity.getMenu().getId());
+        return new FoodDto(entity.getMenu().getId(), entity.getId(), entity.getName(), entity.getDescription(),
+                entity.getFoodType().getId(), entity.getPrice().doubleValue(), entity.getImageUrl());
     }
 }

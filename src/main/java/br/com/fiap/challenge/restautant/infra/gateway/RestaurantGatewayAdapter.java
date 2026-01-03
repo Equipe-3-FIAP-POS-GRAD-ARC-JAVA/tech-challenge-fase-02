@@ -1,5 +1,11 @@
 package br.com.fiap.challenge.restautant.infra.gateway;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
 import br.com.fiap.challenge.restautant.core.dto.RestaurantDto;
 import br.com.fiap.challenge.restautant.core.dto.RestaurantInput;
 import br.com.fiap.challenge.restautant.core.gateway.RestaurantGateway;
@@ -8,11 +14,6 @@ import br.com.fiap.challenge.restautant.infra.entity.Restaurant;
 import br.com.fiap.challenge.restautant.infra.entity.State;
 import br.com.fiap.challenge.restautant.infra.entity.ZipCode;
 import br.com.fiap.challenge.restautant.infra.repository.RestaurantRepository;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 public class RestaurantGatewayAdapter implements RestaurantGateway {

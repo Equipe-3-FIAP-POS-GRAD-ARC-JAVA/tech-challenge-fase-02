@@ -1,15 +1,16 @@
 package br.com.fiap.challenge.restautant.infra.gateway;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
 import br.com.fiap.challenge.restautant.core.dto.FoodTypeDto;
 import br.com.fiap.challenge.restautant.core.dto.FoodTypeInput;
 import br.com.fiap.challenge.restautant.core.gateway.FoodTypeGateway;
 import br.com.fiap.challenge.restautant.infra.entity.FoodType;
 import br.com.fiap.challenge.restautant.infra.repository.FoodTypeRepository;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 public class FoodTypeGatewayAdapter implements FoodTypeGateway {
@@ -36,7 +37,7 @@ public class FoodTypeGatewayAdapter implements FoodTypeGateway {
 
     @Override
     public FoodTypeDto createFoodType(FoodTypeInput foodTypeInput) {
-        FoodType entity = new FoodType(foodTypeInput.name());
+        FoodType entity = new FoodType(foodTypeInput.typeFood());
         FoodType saved = foodTypeRepository.save(entity);
         return toDto(saved);
     }
@@ -45,7 +46,7 @@ public class FoodTypeGatewayAdapter implements FoodTypeGateway {
     public FoodTypeDto updateFoodType(FoodTypeInput foodTypeInput) {
         FoodType entity = foodTypeRepository.findById(foodTypeInput.id())
                 .orElseThrow(() -> new RuntimeException("FoodType not found"));
-        entity.setTypeFood(foodTypeInput.name());
+        entity.setTypeFood(foodTypeInput.typeFood());
         FoodType updated = foodTypeRepository.save(entity);
         return toDto(updated);
     }
