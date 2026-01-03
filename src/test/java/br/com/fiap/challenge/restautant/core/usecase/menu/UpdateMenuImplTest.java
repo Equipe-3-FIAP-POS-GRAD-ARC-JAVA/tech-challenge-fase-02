@@ -36,10 +36,12 @@ class UpdateMenuImplTest {
     @Test
     void shouldUpdateMenu() {
         // given
-        UUID id = UUID.randomUUID();
-        MenuInput input = new MenuInput(id, "Updated Restaurant");
+        UUID restaurantId = UUID.randomUUID();
+        UUID menuId = UUID.randomUUID();
 
-        MenuDto expected = new MenuDto(id, UUID.randomUUID(), List.of());
+        MenuInput input = new MenuInput(menuId, restaurantId);
+
+        MenuDto expected = new MenuDto(menuId, restaurantId, List.of());
 
         when(menuGateway.updateMenu(input)).thenReturn(expected);
 

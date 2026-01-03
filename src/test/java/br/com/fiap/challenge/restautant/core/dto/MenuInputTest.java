@@ -2,16 +2,19 @@ package br.com.fiap.challenge.restautant.core.dto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 
 class MenuInputTest {
 
     @Test
     void shouldCreateMenuInputWithAllFields() {
-        String restaurant = "Restaurant Name";
+        UUID restaurantId = UUID.randomUUID();
+        UUID menuId = UUID.randomUUID();    
 
-        MenuInput input = new MenuInput(null, restaurant);
+        MenuInput input = new MenuInput(menuId, restaurantId);
 
-        assertThat(input.restaurant()).isEqualTo(restaurant);
+        assertThat(input.restaurantId()).isEqualTo(restaurantId);
     }
 }

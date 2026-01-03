@@ -36,10 +36,12 @@ class CreateMenuImplTest {
     @Test
     void shouldCreateMenu() {
         // given
-        MenuInput input = new MenuInput(null, "Test Restaurant");
+        UUID restaurantId = UUID.randomUUID();
+        UUID menuId = UUID.randomUUID();
 
-        MenuDto expected = new MenuDto(UUID.randomUUID(), UUID.randomUUID(), List.of());
+        MenuInput input = new MenuInput(menuId, restaurantId);
 
+        MenuDto expected = new MenuDto(menuId, restaurantId, List.of());
         when(menuGateway.createMenu(input)).thenReturn(expected);
 
         // when
