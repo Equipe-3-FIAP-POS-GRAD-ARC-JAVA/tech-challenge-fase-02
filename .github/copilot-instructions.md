@@ -61,8 +61,8 @@ Essa fase expande o sistema ao incluir a gestão dos tipos de usuários, cadastr
 ### RNF07: Testes de API
 - Collections do Postman ou similar para testar os endpoints da API.
 
-### RNF08: Apresentação
-- Vídeo de aproximadamente 5 minutos apresentando as funcionalidades e o projeto em execução.
+### RNF09: Controle de Qualidade de Commits
+- Nunca commitar código sem revisão humana. Todos os commits devem ser revisados por pelo menos um desenvolvedor antes de serem enviados ao repositório.
 
 ### Commit Message Guidelines
 Sempre gere mensagens de commit em inglês e comitar os arquivos em grupos lógicos seguindo a especificação Conventional Commits:
