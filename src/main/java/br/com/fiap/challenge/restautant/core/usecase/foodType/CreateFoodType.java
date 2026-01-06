@@ -1,9 +1,0 @@
-package br.com.fiap.challenge.restautant.core.usecase.foodType;
-
-import br.com.fiap.challenge.restautant.core.dto.FoodTypeDto;
-import br.com.fiap.challenge.restautant.core.dto.FoodTypeInput;
-import br.com.fiap.challenge.restautant.core.usecase.base.UseCase;
-
-public interface CreateFoodType extends UseCase<FoodTypeInput, FoodTypeDto> {
-    FoodTypeDto execute(FoodTypeInput foodTypeInput);
-}
