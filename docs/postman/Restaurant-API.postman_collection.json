@@ -1,37 +1,312 @@
 {
-  "info": {
-    "name": "🍽️ Restaurant Management API",
-    "description": "Collection for Restaurant Management System API - Tech Challenge Fase 02",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "variable": [
-    {
-      "key": "baseUrl",
-      "value": "http://localhost:8080",
-      "type": "string"
-    },
-    {
-      "key": "restaurantId",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "menuId",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "foodId",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "foodTypeId",
-      "value": "",
-      "type": "string"
-    }
-  ],
-  "item": [
+	"info": {
+		"_postman_id": "95662c6d-d8e4-4ab0-b652-d91557899ab4",
+		"name": "🍽️ Restaurant Management API",
+		"description": "Collection for Restaurant Management System API - Tech Challenge Fase 02",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "👤 Users",
+			"item": [
+				{
+					"name": "➕ Create User (Owner)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    pm.collectionVariables.set('ownerId', response.id);",
+									"    console.log('✅ Owner ID saved:', response.id);",
+									"    pm.test('✅ User created successfully', () => {",
+									"        pm.expect(response.id).to.not.be.undefined;",
+									"        pm.expect(response.role).to.equal('OWNER_RESTAURANT');",
+									"    });",
+									"} else {",
+									"    pm.test('❌ Failed to create user', () => {",
+									"        pm.expect(pm.response.code).to.equal(201);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const timestamp = Date.now();",
+									"pm.collectionVariables.set('userName', 'Owner ' + timestamp);",
+									"pm.collectionVariables.set('userEmail', 'owner' + timestamp + '@example.com');",
+									"pm.collectionVariables.set('userLogin', 'owner' + timestamp);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{userName}}\",\n  \"email\": \"{{userEmail}}\",\n  \"login\": \"{{userLogin}}\",\n  \"password\": \"password123\",\n  \"active\": true,\n  \"role\": \"OWNER_RESTAURANT\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Creates a new user with OWNER_RESTAURANT role"
+					},
+					"response": []
+				},
+				{
+					"name": "➕ Create User (Customer)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    pm.collectionVariables.set('userId', response.id);",
+									"    console.log('✅ User ID saved:', response.id);",
+									"    pm.test('✅ Customer created successfully', () => {",
+									"        pm.expect(response.id).to.not.be.undefined;",
+									"        pm.expect(response.role).to.equal('CUSTOMER');",
+									"    });",
+									"} else {",
+									"    pm.test('❌ Failed to create customer', () => {",
+									"        pm.expect(pm.response.code).to.equal(201);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const timestamp = Date.now();",
+									"pm.collectionVariables.set('customerName', 'Customer ' + timestamp);",
+									"pm.collectionVariables.set('customerEmail', 'customer' + timestamp + '@example.com');",
+									"pm.collectionVariables.set('customerLogin', 'customer' + timestamp);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{customerName}}\",\n  \"email\": \"{{customerEmail}}\",\n  \"login\": \"{{customerLogin}}\",\n  \"password\": \"password123\",\n  \"active\": true,\n  \"role\": \"CUSTOMER\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Creates a new user with CUSTOMER role"
+					},
+					"response": []
+				},
+				{
+					"name": "📋 List All Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const users = pm.response.json();",
+									"    console.log('📋 Found', users.length, 'users');",
+									"    if (users.length > 0) {",
+									"        const owner = users.find(u => u.role === 'OWNER_RESTAURANT');",
+									"        if (owner) {",
+									"            pm.collectionVariables.set('ownerId', owner.id);",
+									"            console.log('✅ Owner ID saved:', owner.id);",
+									"        }",
+									"        pm.collectionVariables.set('userId', users[0].id);",
+									"        console.log('✅ First user ID saved:', users[0].id);",
+									"    }",
+									"    pm.test('✅ Users listed successfully', () => {",
+									"        pm.expect(users).to.be.an('array');",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Retrieves all users"
+					},
+					"response": []
+				},
+				{
+					"name": "🔍 Get User By Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const user = pm.response.json();",
+									"    console.log('🔍 User found:', user.name);",
+									"    pm.test('✅ User retrieved successfully', () => {",
+									"        pm.expect(user.id).to.not.be.undefined;",
+									"    });",
+									"} else if (pm.response.code === 404) {",
+									"    pm.test('⚠️ User not found', () => {",
+									"        pm.expect(pm.response.code).to.equal(404);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}"
+							]
+						},
+						"description": "Retrieves a specific user by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "✏️ Update User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const user = pm.response.json();",
+									"    console.log('✏️ User updated:', user.name);",
+									"    pm.test('✅ User updated successfully', () => {",
+									"        pm.expect(user.id).to.not.be.undefined;",
+									"        pm.expect(user.name).to.equal('Updated User Name');",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated User Name\",\n  \"email\": \"updated@example.com\",\n  \"login\": \"updatedlogin\",\n  \"password\": \"newpassword123\",\n  \"active\": true,\n  \"role\": \"CUSTOMER\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}"
+							]
+						},
+						"description": "Updates an existing user"
+					},
+					"response": []
+				},
+				{
+					"name": "🗑️ Delete User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 204) {",
+									"    console.log('🗑️ User deleted successfully');",
+									"    pm.test('✅ User deleted successfully', () => {",
+									"        pm.expect(pm.response.code).to.equal(204);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}"
+							]
+						},
+						"description": "Deletes a user by ID"
+					},
+					"response": []
+				}
+			],
+			"description": "CRUD operations for users (Owners and Customers)"
+		},
 		{
 			"name": "🏪 Restaurant",
 			"item": [
@@ -44,14 +319,36 @@
 								"exec": [
 									"if (pm.response.code === 201) {",
 									"    const response = pm.response.json();",
-									"    pm.collectionVariables.set('restaurantId', response.restaurantId);",
-									"    console.log('✅ Restaurant ID saved:', response.restaurantId);",
+									"    ",
+									"    // Validação robusta do restaurantId antes de salvar",
+									"    const restaurantId = response.restaurantId;",
+									"    ",
 									"    pm.test('✅ Restaurant created successfully', () => {",
-									"        pm.expect(response.restaurantId).to.not.be.undefined;",
+									"        pm.expect(restaurantId).to.not.be.undefined;",
+									"        pm.expect(restaurantId).to.not.be.null;",
+									"        pm.expect(restaurantId).to.be.a('string');",
+									"        pm.expect(restaurantId.trim()).to.not.be.empty;",
 									"        pm.expect(response.name).to.eql(pm.variables.get('restaurantName'));",
 									"    });",
+									"    ",
+									"    // Salva o restaurantId somente se passar nas validações",
+									"    if (restaurantId && typeof restaurantId === 'string' && restaurantId.trim() !== '') {",
+									"        pm.collectionVariables.set('restaurantId', restaurantId);",
+									"        console.log('✅ Restaurant ID saved:', restaurantId);",
+									"        ",
+									"        // Verificação de que o valor foi salvo corretamente",
+									"        const savedId = pm.collectionVariables.get('restaurantId');",
+									"        pm.test('✅ Restaurant ID stored correctly in collection variables', () => {",
+									"            pm.expect(savedId).to.eql(restaurantId);",
+									"        });",
+									"    } else {",
+									"        console.error('❌ Invalid restaurantId received:', restaurantId);",
+									"        pm.test('❌ restaurantId validation failed - value is invalid', () => {",
+									"            pm.expect.fail('restaurantId is empty, null, or not a string');",
+									"        });",
+									"    }",
 									"} else {",
-									"    pm.test('❌ Failed to create restaurant', () => {",
+									"    pm.test('❌ Failed to create restaurant - Expected status 201, got ' + pm.response.code, () => {",
 									"        pm.expect(pm.response.code).to.equal(201);",
 									"    });",
 									"}"
@@ -1025,45 +1322,427 @@
 				}
 			],
 			"description": "CRUD operations for foods"
+		},
+		{
+			"name": "🕒 Opening Hours",
+			"item": [
+				{
+					"name": "➕ Create Opening Hours",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    pm.collectionVariables.set('openingHoursId', response.id);",
+									"    console.log('✅ Opening Hours ID saved:', response.id);",
+									"    pm.test('✅ Opening hours created successfully', () => {",
+									"        pm.expect(response.id).to.not.be.undefined;",
+									"        pm.expect(response.restaurantId).to.equal(pm.collectionVariables.get('restaurantId'));",
+									"    });",
+									"} else {",
+									"    pm.test('❌ Failed to create opening hours', () => {",
+									"        pm.expect(pm.response.code).to.equal(201);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"restaurantId\": \"{{restaurantId}}\",\n  \"weekday\": \"MONDAY\",\n  \"opensAt\": \"08:00:00\",\n  \"closesAt\": \"22:00:00\",\n  \"isClosed\": false\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/opening-hours",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"opening-hours"
+							]
+						},
+						"description": "Creates opening hours for a restaurant"
+					},
+					"response": []
+				},
+				{
+					"name": "🔍 Get Opening Hours By Restaurant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const openingHours = pm.response.json();",
+									"    console.log('🔍 Found', openingHours.length, 'opening hours for this restaurant');",
+									"    if (openingHours.length > 0) {",
+									"        pm.collectionVariables.set('openingHoursId', openingHours[0].id);",
+									"        console.log('✅ First opening hours ID saved:', openingHours[0].id);",
+									"    }",
+									"    pm.test('✅ Opening hours retrieved successfully', () => {",
+									"        pm.expect(openingHours).to.be.an('array');",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/opening-hours/restaurant/{{restaurantId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"opening-hours",
+								"restaurant",
+								"{{restaurantId}}"
+							]
+						},
+						"description": "Retrieves all opening hours for a specific restaurant"
+					},
+					"response": []
+				},
+				{
+					"name": "✏️ Update Opening Hours",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const openingHours = pm.response.json();",
+									"    console.log('✏️ Opening hours updated for:', openingHours.weekday);",
+									"    pm.test('✅ Opening hours updated successfully', () => {",
+									"        pm.expect(openingHours.id).to.not.be.undefined;",
+									"        pm.expect(openingHours.opensAt).to.equal('09:00:00');",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"restaurantId\": \"{{restaurantId}}\",\n  \"weekday\": \"MONDAY\",\n  \"opensAt\": \"09:00:00\",\n  \"closesAt\": \"23:00:00\",\n  \"isClosed\": false\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/opening-hours/{{openingHoursId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"opening-hours",
+								"{{openingHoursId}}"
+							]
+						},
+						"description": "Updates existing opening hours"
+					},
+					"response": []
+				}
+			],
+			"description": "Operations for restaurant opening hours"
+		},
+		{
+			"name": "🔗 Owner Restaurant",
+			"item": [
+				{
+					"name": "➕ Link Owner to Restaurant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    pm.collectionVariables.set('ownerRestaurantId', response.id);",
+									"    console.log('✅ Owner-Restaurant link ID saved:', response.id);",
+									"    pm.test('✅ Owner linked to restaurant successfully', () => {",
+									"        pm.expect(response.id).to.not.be.undefined;",
+									"        pm.expect(response.ownerId).to.equal(pm.collectionVariables.get('ownerId'));",
+									"        pm.expect(response.restaurantId).to.equal(pm.collectionVariables.get('restaurantId'));",
+									"    });",
+									"} else {",
+									"    pm.test('❌ Failed to link owner to restaurant', () => {",
+									"        pm.expect(pm.response.code).to.equal(201);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ownerId\": \"{{ownerId}}\",\n  \"restaurantId\": \"{{restaurantId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/owners/restaurants",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"owners",
+								"restaurants"
+							]
+						},
+						"description": "Links an owner to a restaurant"
+					},
+					"response": []
+				},
+				{
+					"name": "🔍 Get Restaurants By Owner",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const ownerRestaurants = pm.response.json();",
+									"    console.log('🔍 Found', ownerRestaurants.length, 'restaurants for this owner');",
+									"    if (ownerRestaurants.length > 0) {",
+									"        pm.collectionVariables.set('ownerRestaurantId', ownerRestaurants[0].id);",
+									"        console.log('✅ First owner-restaurant ID saved:', ownerRestaurants[0].id);",
+									"    }",
+									"    pm.test('✅ Owner restaurants retrieved successfully', () => {",
+									"        pm.expect(ownerRestaurants).to.be.an('array');",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/owners/{{ownerId}}/restaurants",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"owners",
+								"{{ownerId}}",
+								"restaurants"
+							]
+						},
+						"description": "Retrieves all restaurants owned by a specific owner"
+					},
+					"response": []
+				},
+				{
+					"name": "🔍 Get Owners By Restaurant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const restaurantOwners = pm.response.json();",
+									"    console.log('🔍 Found', restaurantOwners.length, 'owners for this restaurant');",
+									"    pm.test('✅ Restaurant owners retrieved successfully', () => {",
+									"        pm.expect(restaurantOwners).to.be.an('array');",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/restaurants/{{restaurantId}}/owners",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"restaurants",
+								"{{restaurantId}}",
+								"owners"
+							]
+						},
+						"description": "Retrieves all owners of a specific restaurant"
+					},
+					"response": []
+				},
+				{
+					"name": "🗑️ Unlink Owner from Restaurant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 204) {",
+									"    console.log('🗑️ Owner unlinked from restaurant successfully');",
+									"    pm.test('✅ Owner unlinked from restaurant successfully', () => {",
+									"        pm.expect(pm.response.code).to.equal(204);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/owners/{{ownerId}}/restaurants/{{restaurantId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"owners",
+								"{{ownerId}}",
+								"restaurants",
+								"{{restaurantId}}"
+							]
+						},
+						"description": "Unlinks an owner from a restaurant"
+					},
+					"response": []
+				}
+			],
+			"description": "Operations for linking owners to restaurants"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
 		}
 	],
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "http://localhost:8080",
-			"type": "string"
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "ownerId",
+			"value": "f76109a9-a1bc-47f7-87ac-ab6214e6c72e"
 		},
 		{
 			"key": "restaurantId",
-			"value": "",
-			"type": "string"
+			"value": null
 		},
 		{
 			"key": "menuId",
-			"value": "",
-			"type": "string"
+			"value": null
 		},
 		{
 			"key": "foodId",
-			"value": "",
-			"type": "string"
+			"value": "bbf30671-b827-4b2f-a174-c217be291812"
 		},
 		{
 			"key": "foodTypeId",
-			"value": "",
-			"type": "string"
+			"value": "caccc1b1-dcb3-4ee4-a0f0-a80828fe3ed9"
+		},
+		{
+			"key": "openingHoursId",
+			"value": "6bf4e8ce-b68f-4862-8948-8b7f6df7d36d"
+		},
+		{
+			"key": "ownerRestaurantId",
+			"value": "85a491e3-2a78-433c-9723-7f3ee6927f84"
+		},
+		{
+			"key": "userName",
+			"value": "Owner 1768135651237"
+		},
+		{
+			"key": "userEmail",
+			"value": "owner1768135651237@example.com"
+		},
+		{
+			"key": "userLogin",
+			"value": "owner1768135651237"
+		},
+		{
+			"key": "customerName",
+			"value": "João Santos"
+		},
+		{
+			"key": "customerEmail",
+			"value": "joao.santos@mail.com"
+		},
+		{
+			"key": "customerLogin",
+			"value": "joao.santos"
 		},
 		{
 			"key": "restaurantName",
-			"value": ""
+			"value": "Restaurant 1768135668114"
 		},
 		{
 			"key": "foodTypeName",
-			"value": ""
+			"value": "Type 1768135708032"
 		},
 		{
 			"key": "foodName",
-			"value": ""
+			"value": "Food 1768135718291"
 		}
 	]
 }
