@@ -10,6 +10,8 @@
 | Rhayana Lacerda Gomes | RM367798 |
 | Vinicius Padovam Valentim | RM367199|
 
+Repositório do projeto: https://github.com/Equipe-3-FIAP-POS-GRAD-ARC-JAVA/tech-challenge-fase-02
+
 # 1. Introdução
 
 # 1.1 Descrição do problema
@@ -261,6 +263,47 @@ Códigos de status HTTP retornados pela API em casos de erro:
 |500	|Erro interno	|Exceções não tratadas (padrão)|
 
 # 4. Configuração do Projeto
+
+## 4.1 Execução do Projeto
+
+### 4.1.1 Usando Docker Compose
+1. **Clone o repositório e navegue até a pasta do projeto**
+
+2. **Copie o arquivo de exemplo de variáveis de ambiente (opcional)**
+   ```bash
+   cp .env.example .env
+   ```
+
+3. **Inicie os serviços**
+   ```bash
+   docker compose up -d
+   ```
+
+4. **Finalize os serviços**
+   ```bash
+   docker compose down
+   ```
+
+   Isso irá:
+   - Construir a imagem da aplicação Java
+   - Iniciar o banco de dados PostgreSQL
+   - Iniciar a aplicação Spring Boot
+   - Aguardar o banco ficar saudável antes de iniciar a aplicação
+  
+### 4.1.2 Usando o maven
+
+```bash
+## 1. Iniciar apenas PostgreSQL
+docker compose up -d postgres
+  
+## 2. Executar Spring Boot localmente (com hot reload)
+./mvnw spring-boot:run -Dspring-boot.devtools.restart.enabled=true
+  
+## 3. Para debug com breakpoints
+./mvnw spring-boot:run \
+  -Dspring-boot.devtools.restart.enabled=true \
+  -Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'
+```
 
 # 5. Qualidade do Código
 
