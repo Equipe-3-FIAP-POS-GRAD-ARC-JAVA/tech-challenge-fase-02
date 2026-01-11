@@ -307,7 +307,174 @@ docker compose up -d postgres
 
 # 5. Qualidade do Código
 
+## 5.1 Arquitetura Limpa (Clean Architecture)
+
+O projeto implementa os princípios da Clean Architecture, garantindo separação clara de responsabilidades e independência de frameworks.
+
+### 5.1.1 Organização em Camadas
+
+#### Camada Core (Regras de Negócio)
+Localizada no pacote `br.com.fiap.challenge.restaurant.core`, contém toda a lógica de negócio e é completamente independente de frameworks:
+
+- **Domain Entities** (`core/domain/entity/`): Entidades de domínio puras (POJOs) sem anotações de framework
+- **Value Objects** (`core/domain/valueobject/`): Objetos imutáveis como `ZipCode` e `State` com validação de negócio
+- **Use Cases** (`core/usecase/`): Implementações dos casos de uso organizados por domínio (user, restaurant, menu, food, etc.)
+- **Gateway Interfaces** (`core/gateway/`): Interfaces que definem portas (ports) para comunicação com a camada externa
+- **DTOs** (`core/dto/`): Objetos de transferência de dados usando Java Records (imutáveis)
+
+#### Camada Infrastructure (Adaptadores)
+Localizada no pacote `br.com.fiap.challenge.restaurant.infra`, contém todas as adaptações para frameworks e tecnologias externas:
+
+- **JPA Entities** (`infra/entity/`): Entidades de persistência com anotações JPA, separadas das entidades de domínio
+- **Gateway Adapters** (`infra/gateway/`): Implementações dos gateways que adaptam para o Spring Data JPA
+- **Controllers** (`infra/web/controller/`): Controladores REST que lidam apenas com requisições HTTP
+- **API Interfaces** (`infra/web/api/`): Contratos de API com documentação OpenAPI/Swagger
+- **Repositories** (`infra/repository/`): Repositórios Spring Data JPA
+- **Configuration** (`infra/config/`): Classes de configuração Spring
+
+### 5.1.2 Regra de Dependência
+
+O projeto segue estritamente a regra de dependência da Clean Architecture:
+- **Core não depende de Infra**: A camada Core define interfaces (gateways) e a camada Infra as implementa
+- **Fluxo de dependência**: `Infra → Core` (nunca o contrário)
+- **Inversão de Dependência**: Use cases dependem de abstrações (interfaces Gateway), não de implementações concretas
+
+### 5.1.3 Separação de Modelos
+
+O projeto mantém dois modelos de entidades separados:
+
+**Domain Entities** (Core):
+```java
+// Exemplo: br.com.fiap.challenge.restaurant.core.domain.entity.Restaurant
+// POJOs puros sem anotações de framework
+public class Restaurant extends BaseEntity {
+    private String name;
+    private Address address;
+    // Lógica de negócio pura
+}
+```
+
+**JPA Entities** (Infrastructure):
+```java
+// Exemplo: br.com.fiap.challenge.restaurant.infra.entity.Restaurant
+@Entity
+@Table(name = "restaurants")
+public class Restaurant extends BaseEntity {
+    @Column(name = "name")
+    private String name;
+    
+    @Embedded
+    private Address address;
+    // Anotações de persistência
+}
+```
+
+Os **Gateway Adapters** fazem a conversão entre esses modelos.
+
+## 5.2 Princípios SOLID
+
+### 5.2.1 Single Responsibility Principle (SRP)
+
+Cada classe tem uma única responsabilidade bem definida:
+
+- **Use Cases**: Cada use case realiza uma única operação de negócio
+  - Exemplo: `CreateUserImpl` apenas cria usuários
+  - Exemplo: `UpdateRestaurantImpl` apenas atualiza restaurantes
+
+- **Controllers**: Apenas lidam com requisições HTTP, delegando lógica de negócio para use cases
+  - Exemplo: `UserController`
+
+- **Gateway Adapters**: Apenas convertem entre modelos de domínio e persistência
+  - Exemplo: `RestaurantGatewayAdapter`
+
+### 5.2.2 Open/Closed Principle (OCP)
+
+O sistema é aberto para extensão, mas fechado para modificação:
+
+- **Interfaces de Use Case**: Novos comportamentos podem ser adicionados implementando novas interfaces sem modificar código existente
+- **Gateway Interfaces**: Diferentes implementações podem ser criadas (ex: trocar banco de dados) sem alterar a camada Core
+- **API Interfaces**: Novos endpoints podem ser adicionados através de novas interfaces
+
+### 5.2.3 Liskov Substitution Principle (LSP)
+
+Implementações podem ser substituídas por suas interfaces sem quebrar o sistema:
+
+- **Gateway Implementations**: Qualquer implementação de `RestaurantGateway` pode ser usada pelos use cases
+- **Use Case Implementations**: Qualquer implementação de `CreateRestaurant` pode ser injetada nos controllers
+
+### 5.2.4 Interface Segregation Principle (ISP)
+
+Interfaces são específicas e focadas:
+
+- **Use Cases de Método Único**: Cada interface de use case possui apenas um método `execute()`
+  - Exemplo: `CreateFood`
+  - Exemplo: `UpdateMenu`
+
+- **Gateway Interfaces Especializadas**: Cada gateway tem métodos específicos para seu domínio
+  - `FoodGateway`: Apenas operações de Food
+  - `MenuGateway`: Apenas operações de Menu
+
+- **Base Use Case Interfaces**: Interfaces base genéricas para diferentes assinaturas
+  - `UseCase<P, R>`: Para casos com input e output
+  - `UnitUseCase<I>`: Para casos com input sem output
+  - `NullaryUseCase<O>`: Para casos sem input com output
+
+### 5.2.5 Dependency Inversion Principle (DIP)
+
+Módulos de alto nível não dependem de módulos de baixo nível - ambos dependem de abstrações:
+
+- **Use Cases dependem de Gateways**: Use cases (alto nível) dependem de interfaces Gateway (abstrações), não de repositórios (baixo nível)
+  
+  Exemplo em `LinkOwnerRestaurantImpl`:
+  ```java
+  public class LinkOwnerRestaurantImpl implements LinkOwnerRestaurant {
+      private final OwnerRestaurantGateway gateway; // Dependência de abstração
+      
+      public LinkOwnerRestaurantImpl(OwnerRestaurantGateway gateway) {
+          this.gateway = gateway;
+      }
+  }
+  ```
+
+- **Controllers dependem de Use Cases**: Controllers (alto nível) dependem de interfaces de use cases (abstrações)
+  
+- **Configuração via Spring**: As implementações concretas são configuradas através de beans Spring em classes `@Configuration`
+  
+  Exemplo em `UseCaseFoodConfig`:
+  ```java
+  @Configuration
+  public class UseCaseFoodConfig {
+      @Bean
+      public CreatedFood createdFood(FoodGateway foodGateway) {
+          return new CreatedFoodImpl(foodGateway);
+      }
+  }
+  ```
+
+## 5.3 Práticas de Desenvolvimento Spring Boot
+
+### 5.3.1 Injeção de Dependências
+
+- **Constructor Injection**: Todo o projeto utiliza injeção por construtor (não há uso de `@Autowired` em campos)
+- **Imutabilidade**: Dependências são declaradas como `final`
+- **Configuração Explícita**: Beans são criados através de métodos `@Bean` em classes `@Configuration`
+
+### 5.3.2 Anotações e Estereótipos
+
+- `@RestController`: Controllers REST
+- `@Service`: Não utilizado (use cases são configurados via `@Bean`)
+- `@Repository`: Repositórios Spring Data JPA
+- `@Component`: Gateway adapters
+- `@Configuration`: Classes de configuração de beans
+
+### 5.3.3 Separação de Responsabilidades
+
+- **API Interfaces**: Contratos de API com documentação OpenAPI separados da implementação
+- **DTOs como Records**: Uso de Java Records para DTOs imutáveis
+- **Exception Handling**: Tratamento centralizado de exceções com `@ControllerAdvice`
+
 # 6. Estratégia de Testes e Cobertura
+
 
 # 7. Collections para Teste
 
