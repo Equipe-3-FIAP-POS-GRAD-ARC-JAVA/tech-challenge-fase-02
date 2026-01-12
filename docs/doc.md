@@ -249,6 +249,7 @@ A API retorna respostas de erro personalizadas que incluem detalhes úteis, como
 Lançada em casos de violação de regras de negócio:
 
 |Situação	|Mensagem	|Local|
+|----------|-----------|-----|
 |Email duplicado	|"Email already exists"	|CreateUserImpl|
 |Login duplicado	|"Login already exists"	|CreateUserImpl|
 |Proprietário já vinculado	|"Owner already linked to restaurant"	|OwnerRestaurantGatewayAdapter|
@@ -258,6 +259,7 @@ Lançada em casos de violação de regras de negócio:
 Códigos de status HTTP retornados pela API em casos de erro:
 
 |Status	|Situação	|Exemplo|
+|------|-----------|-------|
 |404	|Recurso não encontrado	|Usuário, Restaurante, Menu, etc. não existe|
 |400	|Dados inválidos	|Email/Login duplicado, validação de regra de negócio|
 |500	|Erro interno	|Exceções não tratadas (padrão)|
@@ -474,6 +476,380 @@ Módulos de alto nível não dependem de módulos de baixo nível - ambos depend
 - **Exception Handling**: Tratamento centralizado de exceções com `@ControllerAdvice`
 
 # 6. Estratégia de Testes e Cobertura
+
+O projeto implementa uma estratégia abrangente de testes para garantir a qualidade e confiabilidade do código, com foco em testes unitários e de integração.
+
+## 6.1 Ferramentas e Frameworks
+
+### 6.1.1 JUnit 5 (Jupiter)
+Framework principal para escrita e execução de testes unitários, fornecendo:
+- Anotações modernas (`@Test`, `@BeforeEach`, `@DisplayName`)
+- Suporte para testes parametrizados
+- Organização clara dos testes
+
+### 6.1.2 Mockito
+Framework de mocking utilizado para isolar unidades de código durante os testes:
+- `@Mock`: Criação de objetos mock
+- `@ExtendWith(MockitoExtension.class)`: Integração com JUnit 5
+- Verificação de comportamento com `verify()`
+- Stubbing de métodos com `when().thenReturn()`
+
+### 6.1.3 Spring Boot Test
+Suporte para testes de integração com o contexto Spring:
+- `@SpringBootTest`: Testes de integração com contexto completo da aplicação
+- `@WebMvcTest`: Testes de controllers REST com MockMvc
+- `@MockitoBean`: Injeção de mocks no contexto Spring
+
+### 6.1.4 AssertJ
+Biblioteca de assertions fluente que melhora a legibilidade dos testes:
+```java
+assertThat(result).isEqualTo(expected);
+assertThat(result).isNotNull();
+```
+
+### 6.1.5 JaCoCo (Java Code Coverage)
+Ferramenta de análise de cobertura de código:
+- Geração automática de relatórios após execução dos testes
+- Relatórios HTML disponíveis em `target/site/jacoco/`
+- Configurado no Maven para execução durante a fase de testes
+
+### 6.1.6 H2 Database
+Banco de dados em memória utilizado para testes, isolando o ambiente de teste do banco de dados de produção (PostgreSQL).
+
+## 6.2 Estrutura dos Testes
+
+O projeto possui **79 classes de teste** organizadas em uma estrutura que espelha a estrutura do código fonte:
+
+```
+src/test/java/br/com/fiap/challenge/restaurant/
+├── RestautantApplicationTests.java          # Teste de inicialização da aplicação
+├── core/
+│   ├── domain/
+│   │   ├── entity/                          # Testes de entidades de domínio
+│   │   │   ├── AddressTest.java
+│   │   │   ├── BaseEntityTest.java
+│   │   │   ├── FoodTest.java
+│   │   │   ├── MenuTest.java
+│   │   │   └── OpeningHoursTest.java
+│   │   └── valueobject/                     # Testes de value objects
+│   │       ├── StateTest.java
+│   │       └── ZipCodeTest.java
+│   ├── dto/                                 # Testes de DTOs (Records)
+│   │   ├── FoodDtoTest.java
+│   │   ├── FoodInputTest.java
+│   │   ├── FoodTypeDtoTest.java
+│   │   ├── FoodTypeInputTest.java
+│   │   ├── MenuDtoTest.java
+│   │   ├── MenuInputTest.java
+│   │   ├── OwnerRestaurantDtoTest.java
+│   │   ├── OwnerRestaurantInputTest.java
+│   │   ├── RestaurantDtoTest.java
+│   │   ├── RestaurantInputTest.java
+│   │   ├── UserDtoTest.java
+│   │   └── UserInputTest.java
+│   └── usecase/                             # Testes de casos de uso
+│       ├── food/
+│       │   ├── CreatedFoodImplTest.java
+│       │   ├── DeleteFoodImplTest.java
+│       │   ├── ListAllFoodByMenuImplTest.java
+│       │   ├── ListFoodByIdImplTest.java
+│       │   └── UpdateFoodImplTest.java
+│       ├── foodType/
+│       │   ├── CreateFoodTypeImplTest.java
+│       │   ├── DeleteFoodTypeImplTest.java
+│       │   ├── ListAllFoodTypeImplTest.java
+│       │   ├── ListFoodTypeByIdImplTest.java
+│       │   └── UpdateFoodTypeImplTest.java
+│       ├── menu/
+│       │   ├── CreateMenuImplTest.java
+│       │   ├── DeleteMenuImplTest.java
+│       │   ├── ListAllMenuImplTest.java
+│       │   ├── ListMenuByIdImplTest.java
+│       │   ├── ListMenuByRestaurantImplTest.java
+│       │   └── UpdateMenuImplTest.java
+│       ├── openinghours/
+│       │   ├── CreateOpeningHoursImplTest.java
+│       │   ├── ListOpeningHoursByRestaurantImplTest.java
+│       │   └── UpdateOpeningHoursImplTest.java
+│       ├── OwnerRestaurant/
+│       │   ├── LinkOwnerRestaurantImplTest.java
+│       │   ├── ListOwnerRestaurantByOwnerImplTest.java
+│       │   └── UnlinkOwnerRestaurantImplTest.java
+│       ├── restaurant/
+│       │   ├── CreateRestaurantImplTest.java
+│       │   ├── DeleteRestaurantImplTest.java
+│       │   ├── ListAllRestaurantImplTest.java
+│       │   ├── ListRestaurantByIdImplTest.java
+│       │   └── UpdateRestaurantImplTest.java
+│       └── user/
+│           ├── CreateUserImplTest.java
+│           ├── DeleteUserImplTest.java
+│           ├── ListAllUserImplTest.java
+│           ├── ListUserByIdImplTest.java
+│           └── UpdateUserImplTest.java
+└── infra/
+    ├── web/controller/                      # Testes de controllers REST
+    │   ├── OwnerRestaurantControllerTest.java
+    │   └── UserControllerTest.java
+    ├── gateway/                             # Testes de gateway adapters
+    └── exceptions/                          # Testes de tratamento de erros
+        ├── GlobalExceptionHandlerTest.java
+        └── ProblemDetailBuilderTest.java
+```
+
+## 6.3 Tipos de Testes Implementados
+
+### 6.3.1 Testes Unitários
+
+#### **Testes de Use Cases (Core)**
+Testes focados nas regras de negócio, isolando dependências através de mocks:
+
+**Exemplo**: `CreatedFoodImplTest.java`
+```java
+@ExtendWith(MockitoExtension.class)
+class CreatedFoodImplTest {
+
+    @Mock
+    private FoodGateway foodGateway;
+    
+    private CreatedFood useCase;
+
+    @BeforeEach
+    void setUp() {
+        useCase = new CreatedFoodImpl(foodGateway);
+    }
+
+    @DisplayName("Should create food")
+    @Test
+    void shouldCreateFood() {
+        // given
+        FoodInput input = new FoodInput(...);
+        FoodDto expected = new FoodDto(...);
+        when(foodGateway.createFood(input)).thenReturn(expected);
+
+        // when
+        FoodDto result = useCase.execute(input);
+
+        // then
+        assertThat(result).isEqualTo(expected);
+        verify(foodGateway).createFood(input);
+    }
+}
+```
+
+**Características**:
+- Uso do padrão Given-When-Then
+- Isolamento através de mocks
+- Verificação de comportamento e resultado
+- Nomenclatura descritiva com `@DisplayName`
+
+#### **Testes de DTOs**
+Validação da criação e comportamento de objetos de transferência de dados (Java Records):
+- Teste de criação de instâncias
+- Validação de imutabilidade
+- Verificação de métodos `equals()` e `hashCode()`
+
+#### **Testes de Value Objects**
+Validação de regras de negócio em objetos de valor:
+- `ZipCodeTest`: Validação de formato de CEP
+- `StateTest`: Validação de estados brasileiros
+
+#### **Testes de Entidades de Domínio**
+Validação de comportamento e lógica de entidades:
+- `BaseEntityTest`: Testes de comportamento comum a todas as entidades (UUID, timestamps)
+- `AddressTest`: Testes de criação e validação de herança da entidade Address (estende BaseEntity)
+- `FoodTest`: Testes de criação e validação de herança da entidade Food (estende BaseEntity)
+- `MenuTest`: Testes de criação e validação de herança da entidade Menu (estende BaseEntity)
+- `OpeningHoursTest`: Testes de criação e validação de herança da entidade OpeningHours (estende BaseEntity)
+
+**Nota**: As entidades de domínio puro (`FoodType`, `Restaurant`, `User`) no pacote `core.domain.entity` são POJOs simples e não estendem `BaseEntity`. As entidades JPA correspondentes que estendem `BaseEntity` estão no pacote `infra.entity`.
+
+#### **Testes de Use Cases de OpeningHours**
+Casos de uso específicos para gestão de horários de funcionamento:
+- `CreateOpeningHoursImplTest`: Testes de criação de horários (dias abertos e fechados)
+- `ListOpeningHoursByRestaurantImplTest`: Testes de listagem de horários por restaurante
+- `UpdateOpeningHoursImplTest`: Testes de atualização de horários de funcionamento
+
+### 6.3.2 Testes de Integração
+
+#### **Testes de Controllers REST**
+Testes da camada de apresentação usando MockMvc:
+
+**Exemplo**: `UserControllerTest.java`
+```java
+@WebMvcTest(UserController.class)
+class UserControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @MockitoBean
+    private CreateUser createUser;
+    // ... outros use cases mockados
+
+    @Test
+    void shouldCreateUser() throws Exception {
+        UserInput input = new UserInput(...);
+        UserDto output = new UserDto(...);
+        
+        when(createUser.execute(any(UserInput.class))).thenReturn(output);
+
+        mockMvc.perform(post("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(input)))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id").value(createdId.toString()))
+            .andExpect(jsonPath("$.name").value("Mariana"))
+            .andExpect(jsonPath("$.password").doesNotExist());
+
+        verify(createUser).execute(any(UserInput.class));
+    }
+}
+```
+
+**Características**:
+- Uso de `@WebMvcTest` para carregar apenas a camada web
+- MockMvc para simular requisições HTTP
+- Validação de status codes, headers e corpo da resposta
+- Verificação de que dados sensíveis (como senhas) não são expostos
+
+#### **Teste de Inicialização da Aplicação**
+Validação de que o contexto Spring é carregado corretamente:
+```java
+@SpringBootTest
+class RestautantApplicationTests {
+    @Test
+    void contextLoads() {
+        // Verifica se a aplicação inicializa sem erros
+    }
+}
+```
+
+### 6.3.3 Testes de Tratamento de Exceções
+
+Validação do comportamento do sistema em situações de erro:
+- `GlobalExceptionHandlerTest`: Testes do manipulador global de exceções
+- `ProblemDetailBuilderTest`: Testes da construção de respostas de erro padronizadas
+
+## 6.4 Cobertura de Código
+
+### 6.4.1 Meta de Cobertura
+O projeto estabelece como meta **80% de cobertura de código**, atendendo aos requisitos técnicos da fase 2.
+
+### 6.4.2 Cobertura Atual
+
+| Métrica | Cobertura |
+|---------|-----------|
+| **Instruções** | **93%** (2.932 de 3.125) |
+| **Branches** | **83%** (30 de 36) |
+| **Linhas** | **94%** (815 de 863) |
+| **Métodos** | **92%** (352 de 381) |
+| **Classes** | **97%** (96 de 98) |
+
+**Status**: ✅ Meta de 80% **SUPERADA** com folga! O projeto alcançou 93% de cobertura de instruções.
+
+### 6.4.3 Cobertura por Camada
+
+| Camada/Pacote | Cobertura |
+|---------------|-----------|
+| **Core - Use Cases** | 93-100% |
+| `core.usecase.openinghours` | 100% |
+| `core.usecase.foodType` | 100% |
+| `core.usecase.restaurant` | 100% |
+| `core.usecase.OwnerRestaurant` | 100% |
+| `core.usecase.user` | 100% |
+| **Core - Domain & DTOs** | 85-100% |
+| **Infra - Controllers** | 99% |
+| **Infra - Entities** | 97% |
+| **Infra - Gateways** | 86% |
+| **Infra - Config** | 98% |
+| **Infra - Exceptions** | 100% |
+
+## 6.5 Execução dos Testes
+
+### 6.5.1 Executar Todos os Testes
+```bash
+./mvnw test
+```
+
+### 6.5.2 Executar Testes com Relatório de Cobertura
+```bash
+./mvnw clean test jacoco:report
+```
+
+### 6.5.3 Visualizar Relatório de Cobertura
+Após a execução dos testes, o relatório JaCoCo estará disponível em:
+```
+target/site/jacoco/index.html
+```
+
+Abra o arquivo no navegador para visualizar:
+- Cobertura por pacote
+- Cobertura por classe
+- Linhas cobertas e não cobertas (destacadas em verde/vermelho)
+- Branches cobertos e não cobertos
+
+### 6.5.4 Executar Testes Específicos
+```bash
+# Executar testes de um pacote específico
+./mvnw test -Dtest="br.com.fiap.challenge.restaurant.core.usecase.food.*"
+
+# Executar uma classe de teste específica
+./mvnw test -Dtest=CreatedFoodImplTest
+
+# Executar um método de teste específico
+./mvnw test -Dtest=CreatedFoodImplTest#shouldCreateFood
+```
+
+## 6.6 Boas Práticas Implementadas
+
+### 6.6.1 Nomenclatura Clara
+- Métodos de teste com nomes descritivos: `shouldCreateUser`, `shouldThrowExceptionWhenEmailExists`
+- Uso de `@DisplayName` para descrições mais legíveis
+
+### 6.6.2 Padrão Given-When-Then
+Estrutura consistente nos testes:
+```java
+// given - Preparação
+FoodInput input = new FoodInput(...);
+when(gateway.createFood(input)).thenReturn(expected);
+
+// when - Ação
+FoodDto result = useCase.execute(input);
+
+// then - Verificação
+assertThat(result).isEqualTo(expected);
+verify(gateway).createFood(input);
+```
+
+### 6.6.3 Isolamento de Testes
+- Cada teste é independente e pode ser executado isoladamente
+- Uso de `@BeforeEach` para setup consistente
+- Mocks são criados para cada teste
+
+### 6.6.4 Testes Focados
+- Um conceito por teste
+- Testes pequenos e fáceis de entender
+- Evita lógica complexa nos testes
+
+### 6.6.5 Configuração de Teste Separada
+- Arquivo `application-test.yml` com configurações específicas para testes
+- Uso de H2 ao invés de PostgreSQL nos testes
+
+## 6.7 Integração Contínua
+
+Os testes são executados automaticamente:
+- Durante o build do Maven: `./mvnw clean install`
+- Antes da criação da imagem Docker
+- No pipeline de CI/CD (se configurado)
+
+Isso garante que:
+- Código com testes falhando não seja integrado
+- A cobertura de código seja mantida acima da meta
+- Regressões sejam detectadas rapidamente
 
 
 # 7. Collections para Teste
