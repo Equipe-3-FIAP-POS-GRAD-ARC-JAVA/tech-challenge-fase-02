@@ -877,7 +877,8 @@ Isso garante que:
 
 Resources para Testes Completos
 Postman Collection
-Arquivo: ![Collection Postman](docs/postman/RestaurantAPI.postman_collection.json)
+Arquivo: [Baixar a Collection Postman](/docs/postman/Restaurant-API.postman_collection.json) em /docs/postman/Restaurant-API.postman_collection.json
+
 
 Swagger UI Interativo
 URL: http://localhost:8080/swagger-ui
