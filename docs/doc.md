@@ -910,13 +910,31 @@ Isso garante que:
 
 # 7. Collections para Teste
 
-Resources para Testes Completos
-Postman Collection
-Arquivo: [Baixar a Collection Postman](/docs/postman/Restaurant-API.postman_collection.json) em /docs/postman/Restaurant-API.postman_collection.json
+## 7.1 Postman Collection
 
+A collection do Postman contém todos os endpoints da API com exemplos de requisições pré-configuradas.
 
-Swagger UI Interativo
-URL: http://localhost:8080/swagger-ui
+**Arquivo**: [Restaurant-API.postman_collection.json](postman/Restaurant-API.postman_collection.json)
+
+**Localização**: `docs/postman/Restaurant-API.postman_collection.json`
+
+### Como Importar:
+1. Abra o Postman
+2. Clique em "Import"
+3. Selecione o arquivo da collection
+4. Todos os endpoints estarão disponíveis para teste
+
+## 7.2 Swagger UI Interativo
+
+Documentação interativa da API com possibilidade de testar endpoints diretamente no navegador.
+
+**URL**: http://localhost:8080/swagger-ui
+
+### Recursos Disponíveis:
+- Documentação completa de todos os endpoints
+- Schemas de request/response
+- Teste de endpoints em tempo real
+- Exemplos de payloads
 
 # 8. Repositório do Código
 
