@@ -920,4 +920,6 @@ URL: http://localhost:8080/swagger-ui
 
 # 8. Repositório do Código
 
+O Repositório completo do código fonte está disponível em:
+
 https://github.com/Equipe-3-FIAP-POS-GRAD-ARC-JAVA/tech-challenge-fase-02
