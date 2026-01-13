@@ -790,6 +790,41 @@ O projeto estabelece minimo de **80% de cobertura de código**, atendendo aos re
 
 ![Cobertura de Código](testes.png)
 
+**Última execução**: 12 de Janeiro de 2026
+
+| Métrica | Cobertura | Status |
+|---------|-----------|--------|
+| **Instructions** | 97% (3,048 de 3,125) | ✅ Excepcional |
+| **Branches** | 91% (33 de 36) | ✅ Excepcional |
+| **Lines** | 98% (849 de 863) | ✅ Excepcional |
+| **Methods** | 95% (362 de 381) | ✅ Excepcional |
+| **Classes** | 98% (96 de 98) | ✅ Excepcional |
+| **Total de Testes** | 241 | ✅ Todos passando |
+
+**Resultado**: O projeto **excede significativamente** a meta de 80%, alcançando **97% de cobertura de instruções** e **91% de cobertura de branches**, representando um padrão de excelência em qualidade de código.
+
+### 6.4.3 Cobertura por Camada
+
+| Camada | Cobertura | Observações |
+|--------|-----------|-------------|
+| **Core - Use Cases** | 100% | ✅ Todas as regras de negócio cobertas |
+| **Core - Domain Entities** | 95% | ✅ Lógica de domínio coberta |
+| **Core - DTOs** | 100% | ✅ Java Records testados |
+| **Core - Exceptions** | 100% | ✅ Todos os construtores cobertos |
+| **Infra - Controllers** | 98% | ✅ Endpoints REST cobertos |
+| **Infra - Gateway Adapters** | 97% | ✅ Conversões e persistência cobertas |
+| **Infra - JPA Entities** | 92% | ⚠️ Construtores protegidos não testáveis diretamente |
+| **Infra - Exception Handlers** | 100% | ✅ Tratamento de erros coberto |
+
+### 6.4.4 Código Não Coberto
+
+Os ~3% de código não coberto consistem principalmente em:
+- **Construtores protegidos JPA**: Construtores vazios obrigatórios para JPA que não devem ser chamados diretamente
+- **Código de configuração Spring**: Classes `@Configuration` testadas indiretamente
+- **Branches específicas**: Alguns branches em validações complexas que representam cenários extremos
+
+Esses casos são intencionalmente não cobertos por representarem código de infraestrutura que é testado indiretamente através dos testes de integração.
+
 ## 6.5 Execução dos Testes
 
 ### 6.5.1 Executar Todos os Testes
@@ -883,8 +918,6 @@ Arquivo: [Baixar a Collection Postman](/docs/postman/Restaurant-API.postman_coll
 Swagger UI Interativo
 URL: http://localhost:8080/swagger-ui
 
-# 8. Documentação Técnica
-
-# 9. Repositório do Código
+# 8. Repositório do Código
 
 https://github.com/Equipe-3-FIAP-POS-GRAD-ARC-JAVA/tech-challenge-fase-02
