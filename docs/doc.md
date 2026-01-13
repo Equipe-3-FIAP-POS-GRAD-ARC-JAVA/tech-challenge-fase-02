@@ -875,6 +875,13 @@ Isso garante que:
 
 # 7. Collections para Teste
 
+Resources para Testes Completos
+Postman Collection
+Arquivo: ![Collection Postman](docs/postman/RestaurantAPI.postman_collection.json)
+
+Swagger UI Interativo
+URL: http://localhost:8080/swagger-ui
+
 # 8. Documentação Técnica
 
 # 9. Repositório do Código
