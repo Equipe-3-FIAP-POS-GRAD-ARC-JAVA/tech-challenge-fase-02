@@ -147,4 +147,61 @@ class RestaurantGatewayAdapterTest {
         assertThat(result).contains("Italian", "Brazilian");
         verify(foodTypeRepository).findAll();
     }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingNonExistentRestaurant() {
+        UUID restaurantId = UUID.randomUUID();
+        AddressInput addressInput = new AddressInput("Street", "123", "City", "Neighborhood", "Country", "State", "12345");
+        RestaurantInput input = new RestaurantInput(restaurantId, "Restaurant", addressInput);
+
+        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.empty());
+
+        try {
+            gateway.updateRestaurant(input);
+        } catch (RuntimeException e) {
+            assertThat(e.getMessage()).isEqualTo("Restaurant not found");
+        }
+    }
+
+    @Test
+    void shouldHandleRestaurantWithMenusAndFoods() {
+        UUID restaurantId = UUID.randomUUID();
+        UUID menuId = UUID.randomUUID();
+        UUID foodId = UUID.randomUUID();
+        UUID foodTypeId = UUID.randomUUID();
+        
+        Address address = new Address("Street", "123", "City", "Neighborhood", "Country", new State("State"), new ZipCode("12345"));
+        Restaurant restaurant = new Restaurant("Test Restaurant", address);
+        restaurant.setId(restaurantId);
+        
+        FoodType foodType = new FoodType("Italian");
+        foodType.setId(foodTypeId);
+        
+        br.com.fiap.challenge.restaurant.infra.entity.Menu menu = new br.com.fiap.challenge.restaurant.infra.entity.Menu(restaurant, null);
+        menu.setId(menuId);
+        
+        br.com.fiap.challenge.restaurant.infra.entity.Food food = new br.com.fiap.challenge.restaurant.infra.entity.Food(
+            "Pizza",
+            "Delicious pizza",
+            foodType,
+            new java.math.BigDecimal("25.50"),
+            "pizza.jpg",
+            menu
+        );
+        food.setId(foodId);
+        
+        menu.setFoods(List.of(food));
+        restaurant.setMenus(List.of(menu));
+
+        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurant));
+
+        RestaurantDto result = gateway.getRestaurantById(restaurantId);
+
+        assertThat(result).isNotNull();
+        assertThat(result.restaurantId()).isEqualTo(restaurantId);
+        assertThat(result.menus()).hasSize(1);
+        assertThat(result.menus().get(0).menuId()).isEqualTo(menuId);
+        assertThat(result.menus().get(0).foods()).hasSize(1);
+        assertThat(result.menus().get(0).foods().get(0).foodId()).isEqualTo(foodId);
+    }
 }

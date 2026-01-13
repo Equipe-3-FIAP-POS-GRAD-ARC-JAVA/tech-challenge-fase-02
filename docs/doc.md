@@ -269,38 +269,37 @@ Códigos de status HTTP retornados pela API em casos de erro:
 ## 4.1 Execução do Projeto
 
 ### 4.1.1 Usando Docker Compose
-1. **Clone o repositório e navegue até a pasta do projeto**
 
-2. **Copie o arquivo de exemplo de variáveis de ambiente (opcional)**
-   ```bash
+```bash
+## 1. ## Clone o repositório e navegue até a pasta do projeto
+    git clone https://github.com/Equipe-3-FIAP-POS-GRAD-ARC-JAVA/tech-challenge-fase-02.git
+    cd tech-challenge-fase-02
+
+## 2. **Copie o arquivo de exemplo de variáveis de ambiente (opcional)**
    cp .env.example .env
-   ```
 
-3. **Inicie os serviços**
-   ```bash
+## 3. **Inicie os serviços**
    docker compose up -d
-   ```
 
-4. **Finalize os serviços**
-   ```bash
+## 4. **Finalize os serviços**
    docker compose down
-   ```
 
-   Isso irá:
+ ```
+ Isso irá:
    - Construir a imagem da aplicação Java
    - Iniciar o banco de dados PostgreSQL
    - Iniciar a aplicação Spring Boot
    - Aguardar o banco ficar saudável antes de iniciar a aplicação
-  
+
 ### 4.1.2 Usando o maven
 
 ```bash
 ## 1. Iniciar apenas PostgreSQL
 docker compose up -d postgres
-  
+
 ## 2. Executar Spring Boot localmente (com hot reload)
 ./mvnw spring-boot:run -Dspring-boot.devtools.restart.enabled=true
-  
+
 ## 3. Para debug com breakpoints
 ./mvnw spring-boot:run \
   -Dspring-boot.devtools.restart.enabled=true \
@@ -518,23 +517,25 @@ Banco de dados em memória utilizado para testes, isolando o ambiente de teste d
 
 ## 6.2 Estrutura dos Testes
 
-O projeto possui **79 classes de teste** organizadas em uma estrutura que espelha a estrutura do código fonte:
+O projeto possui classes de teste organizadas em uma estrutura que espelha a estrutura do código fonte:
 
 ```
 src/test/java/br/com/fiap/challenge/restaurant/
 ├── RestautantApplicationTests.java          # Teste de inicialização da aplicação
-├── core/
+├── core/                                    # Testes da camada Core (19 classes)
 │   ├── domain/
-│   │   ├── entity/                          # Testes de entidades de domínio
+│   │   ├── entity/                          # Testes de entidades de domínio (5 classes)
 │   │   │   ├── AddressTest.java
 │   │   │   ├── BaseEntityTest.java
 │   │   │   ├── FoodTest.java
 │   │   │   ├── MenuTest.java
 │   │   │   └── OpeningHoursTest.java
-│   │   └── valueobject/                     # Testes de value objects
+│   │   └── valueobject/                     # Testes de value objects (2 classes)
 │   │       ├── StateTest.java
 │   │       └── ZipCodeTest.java
-│   ├── dto/                                 # Testes de DTOs (Records)
+│   ├── exception/                           # Testes de exceções (1 classe)
+│   │   └── NotFoundExceptionTest.java
+│   ├── dto/                                 # Testes de DTOs (Records) (12 classes)
 │   │   ├── FoodDtoTest.java
 │   │   ├── FoodInputTest.java
 │   │   ├── FoodTypeDtoTest.java
@@ -547,55 +548,87 @@ src/test/java/br/com/fiap/challenge/restaurant/
 │   │   ├── RestaurantInputTest.java
 │   │   ├── UserDtoTest.java
 │   │   └── UserInputTest.java
-│   └── usecase/                             # Testes de casos de uso
-│       ├── food/
+│   └── usecase/                             # Testes de casos de uso (33 classes)
+│       ├── food/                            # CRUD de Foods (5 classes)
 │       │   ├── CreatedFoodImplTest.java
 │       │   ├── DeleteFoodImplTest.java
 │       │   ├── ListAllFoodByMenuImplTest.java
 │       │   ├── ListFoodByIdImplTest.java
 │       │   └── UpdateFoodImplTest.java
-│       ├── foodType/
+│       ├── foodType/                        # CRUD de FoodTypes (5 classes)
 │       │   ├── CreateFoodTypeImplTest.java
 │       │   ├── DeleteFoodTypeImplTest.java
 │       │   ├── ListAllFoodTypeImplTest.java
 │       │   ├── ListFoodTypeByIdImplTest.java
 │       │   └── UpdateFoodTypeImplTest.java
-│       ├── menu/
+│       ├── menu/                            # CRUD de Menus (5 classes)
 │       │   ├── CreateMenuImplTest.java
 │       │   ├── DeleteMenuImplTest.java
-│       │   ├── ListAllMenuImplTest.java
+│       │   ├── ListAllMenuByRestaurantImplTest.java
 │       │   ├── ListMenuByIdImplTest.java
-│       │   ├── ListMenuByRestaurantImplTest.java
 │       │   └── UpdateMenuImplTest.java
-│       ├── openinghours/
+│       ├── openinghours/                    # Gestão de Horários (3 classes)
 │       │   ├── CreateOpeningHoursImplTest.java
 │       │   ├── ListOpeningHoursByRestaurantImplTest.java
 │       │   └── UpdateOpeningHoursImplTest.java
-│       ├── OwnerRestaurant/
+│       ├── ownerRestaurant/                 # Gestão de Donos (4 classes)
 │       │   ├── LinkOwnerRestaurantImplTest.java
 │       │   ├── ListOwnerRestaurantByOwnerImplTest.java
+│       │   ├── ListOwnerRestaurantByRestaurantImplTest.java
 │       │   └── UnlinkOwnerRestaurantImplTest.java
-│       ├── restaurant/
+│       ├── restaurant/                      # CRUD de Restaurantes (5 classes)
 │       │   ├── CreateRestaurantImplTest.java
 │       │   ├── DeleteRestaurantImplTest.java
 │       │   ├── ListAllRestaurantImplTest.java
 │       │   ├── ListRestaurantByIdImplTest.java
 │       │   └── UpdateRestaurantImplTest.java
-│       └── user/
+│       └── user/                            # CRUD de Usuários (5 classes)
 │           ├── CreateUserImplTest.java
 │           ├── DeleteUserImplTest.java
 │           ├── ListAllUserImplTest.java
 │           ├── ListUserByIdImplTest.java
 │           └── UpdateUserImplTest.java
-└── infra/
-    ├── web/controller/                      # Testes de controllers REST
+└── infra/                                   # Testes da camada Infra (58 classes)
+    ├── entity/                              # Testes de entidades JPA (11 classes)
+    │   ├── AddressTest.java
+    │   ├── BaseEntityTest.java
+    │   ├── FoodEntityTest.java
+    │   ├── FoodTypeEntityTest.java
+    │   ├── MenuEntityTest.java
+    │   ├── OpeningHoursEntityTest.java
+    │   ├── OwnerRestaurantEntityTest.java
+    │   ├── RestaurantEntityTest.java
+    │   ├── StateEntityTest.java
+    │   ├── UserEntityTest.java
+    │   └── ZipCodeEntityTest.java
+    ├── gateway/                             # Testes de gateway adapters (7 classes)
+    │   ├── FoodGatewayAdapterTest.java
+    │   ├── FoodTypeGatewayAdapterTest.java
+    │   ├── MenuGatewayAdapterTest.java
+    │   ├── OpeningHoursGatewayAdapterTest.java
+    │   ├── OwnerRestaurantGatewayAdapterTest.java
+    │   ├── RestaurantGatewayAdapterTest.java
+    │   └── UserGatewayAdapterTest.java
+    ├── web/controller/                      # Testes de controllers REST (7 classes)
+    │   ├── FoodControllerTest.java
+    │   ├── FoodTypeControllerTest.java
+    │   ├── MenuControllerTest.java
+    │   ├── OpeningHoursControllerTest.java
     │   ├── OwnerRestaurantControllerTest.java
+    │   ├── RestaurantControllerTest.java
     │   └── UserControllerTest.java
-    ├── gateway/                             # Testes de gateway adapters
-    └── exceptions/                          # Testes de tratamento de erros
+    └── exceptions/                          # Testes de tratamento de erros (2 classes)
         ├── GlobalExceptionHandlerTest.java
         └── ProblemDetailBuilderTest.java
 ```
+
+### 6.2.1 Observações sobre a Estrutura
+
+1. **Cobertura de Use Cases**: Teste cobrem todas as operações CRUD das 7 entidades principais do sistema
+2. **Testes de DTOs**: Classes garantem a integridade dos objetos de transferência de dados (Java Records)
+3. **Testes de Entidades**: Tanto entidades de domínio (Core) quanto entidades JPA (Infra) possuem testes específicos
+4. **Testes de Integração**: Controllers e Gateway Adapters têm testes que validam a integração com Spring Boot e banco de dados
+5. **Tratamento de Erros**: Testes específicos para validar o comportamento de exceções e respostas de erro da API
 
 ## 6.3 Tipos de Testes Implementados
 
@@ -662,8 +695,6 @@ Validação de comportamento e lógica de entidades:
 - `MenuTest`: Testes de criação e validação de herança da entidade Menu (estende BaseEntity)
 - `OpeningHoursTest`: Testes de criação e validação de herança da entidade OpeningHours (estende BaseEntity)
 
-**Nota**: As entidades de domínio puro (`FoodType`, `Restaurant`, `User`) no pacote `core.domain.entity` são POJOs simples e não estendem `BaseEntity`. As entidades JPA correspondentes que estendem `BaseEntity` estão no pacote `infra.entity`.
-
 #### **Testes de Use Cases de OpeningHours**
 Casos de uso específicos para gestão de horários de funcionamento:
 - `CreateOpeningHoursImplTest`: Testes de criação de horários (dias abertos e fechados)
@@ -717,13 +748,24 @@ class UserControllerTest {
 - Verificação de que dados sensíveis (como senhas) não são expostos
 
 #### **Teste de Inicialização da Aplicação**
-Validação de que o contexto Spring é carregado corretamente:
+Validação de que o contexto Spring é carregado corretamente e teste da criação da instância:
 ```java
 @SpringBootTest
+@ActiveProfiles("test")
 class RestautantApplicationTests {
+    
     @Test
     void contextLoads() {
         // Verifica se a aplicação inicializa sem erros
+    }
+    
+    @Test
+    void shouldCreateRestaurantApplicationInstance() {
+        // When
+        RestaurantApplication application = new RestaurantApplication();
+
+        // Then
+        assertNotNull(application);
     }
 }
 ```
@@ -733,40 +775,20 @@ class RestautantApplicationTests {
 Validação do comportamento do sistema em situações de erro:
 - `GlobalExceptionHandlerTest`: Testes do manipulador global de exceções
 - `ProblemDetailBuilderTest`: Testes da construção de respostas de erro padronizadas
+- `NotFoundExceptionTest`: Testes de todos os construtores da exceção customizada:
+  - Construtor sem argumentos
+  - Construtor com mensagem
+  - Construtor com mensagem e causa
+  - Construtor apenas com causa
 
 ## 6.4 Cobertura de Código
 
 ### 6.4.1 Meta de Cobertura
-O projeto estabelece como meta **80% de cobertura de código**, atendendo aos requisitos técnicos da fase 2.
+O projeto estabelece minimo de **80% de cobertura de código**, atendendo aos requisitos técnicos da fase 2.
 
 ### 6.4.2 Cobertura Atual
 
-| Métrica | Cobertura |
-|---------|-----------|
-| **Instruções** | **93%** (2.932 de 3.125) |
-| **Branches** | **83%** (30 de 36) |
-| **Linhas** | **94%** (815 de 863) |
-| **Métodos** | **92%** (352 de 381) |
-| **Classes** | **97%** (96 de 98) |
-
-**Status**: ✅ Meta de 80% **SUPERADA** com folga! O projeto alcançou 93% de cobertura de instruções.
-
-### 6.4.3 Cobertura por Camada
-
-| Camada/Pacote | Cobertura |
-|---------------|-----------|
-| **Core - Use Cases** | 93-100% |
-| `core.usecase.openinghours` | 100% |
-| `core.usecase.foodType` | 100% |
-| `core.usecase.restaurant` | 100% |
-| `core.usecase.OwnerRestaurant` | 100% |
-| `core.usecase.user` | 100% |
-| **Core - Domain & DTOs** | 85-100% |
-| **Infra - Controllers** | 99% |
-| **Infra - Entities** | 97% |
-| **Infra - Gateways** | 86% |
-| **Infra - Config** | 98% |
-| **Infra - Exceptions** | 100% |
+![Cobertura de Código](testes.png)
 
 ## 6.5 Execução dos Testes
 
@@ -850,7 +872,6 @@ Isso garante que:
 - Código com testes falhando não seja integrado
 - A cobertura de código seja mantida acima da meta
 - Regressões sejam detectadas rapidamente
-
 
 # 7. Collections para Teste
 
