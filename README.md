@@ -945,5 +945,5 @@ https://github.com/Equipe-3-FIAP-POS-GRAD-ARC-JAVA/tech-challenge-fase-02
 # 9. Vídeo Explicativo da API
 
 Vídeo explicativo detalhando a API, suas funcionalidades e como utilizá-la está disponível em:
-https://youtu.be/YourVideoLinkHere
+https://youtu.be/Atualizar_apos_subir_gravação
 
