@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record OpeningHoursUpdateInput(UUID id,
                                       UUID restaurantId,
-                                      DayOfWeek weekda,
+                                      DayOfWeek weekDay,
                                       LocalTime opensAt,
                                       LocalTime closesAt,
                                       boolean isClosed) {

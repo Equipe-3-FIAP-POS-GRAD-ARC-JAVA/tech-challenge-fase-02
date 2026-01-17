@@ -48,11 +48,10 @@ public class OpeningHoursController implements OpeningHoursAPI {
     @PutMapping("/{id}")
     public ResponseEntity<OpeningHoursDto> update(@PathVariable UUID id,
                                                   @RequestBody OpeningHoursUpdateInput input) {
-        // garante que o id do path é o que vale (mesmo padrão do FoodTypeController)
         OpeningHoursUpdateInput updatedInput = new OpeningHoursUpdateInput(
                 id,
                 input.restaurantId(),
-                input.weekda(),     // se no seu record for weekday(), troque aqui também
+                input.weekDay(),
                 input.opensAt(),
                 input.closesAt(),
                 input.isClosed()
