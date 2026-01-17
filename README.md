@@ -224,7 +224,7 @@ Operações para gestão do relacionamento entre proprietários e restaurantes.
 | `/api/owners/{ownerId}/restaurants` | GET | Listar todos os restaurantes de um proprietário | OwnerRestaurantController |
 | `/api/restaurants/{restaurantId}/owners` | GET | Listar todos os proprietários de um restaurante | OwnerRestaurantController |
 
-## 3.8 Tratamento de Erros
+## 3.8 Tratamento de Erros - Padronizado RFC 7807
 A API implementa um sistema centralizado e robusto de tratamento de erros, retornando mensagens claras e códigos HTTP apropriados para facilitar a identificação e resolução de problemas durante as operações.
 
 ### 3.8.1 GlobalExceptionHandler 
@@ -323,7 +323,7 @@ Localizada no pacote `br.com.fiap.challenge.restaurant.core`, contém toda a ló
 - **Gateway Interfaces** (`core/gateway/`): Interfaces que definem portas (ports) para comunicação com a camada externa
 - **DTOs** (`core/dto/`): Objetos de transferência de dados usando Java Records (imutáveis)
 
-#### Camada Infrastructure (Adaptadores)
+#### Camada Infrastructure (Adaptadores e Framework)
 Localizada no pacote `br.com.fiap.challenge.restaurant.infra`, contém todas as adaptações para frameworks e tecnologias externas:
 
 - **JPA Entities** (`infra/entity/`): Entidades de persistência com anotações JPA, separadas das entidades de domínio
@@ -825,6 +825,7 @@ Os ~3% de código não coberto consistem principalmente em:
 
 Esses casos são intencionalmente não cobertos por representarem código de infraestrutura que é testado indiretamente através dos testes de integração.
 
+
 ## 6.5 Execução dos Testes
 
 ### 6.5.1 Executar Todos os Testes
@@ -842,6 +843,8 @@ Após a execução dos testes, o relatório JaCoCo estará disponível em:
 ```
 target/site/jacoco/index.html
 ```
+
+![Visualizar Relatório de Cobertura - Jacoco](./docs/jacoco.png)
 
 Abra o arquivo no navegador para visualizar:
 - Cobertura por pacote
@@ -914,7 +917,7 @@ Isso garante que:
 
 A collection do Postman contém todos os endpoints da API com exemplos de requisições pré-configuradas.
 
-**Arquivo**: [Restaurant-API.postman_collection.json](postman/Restaurant-API.postman_collection.json)
+**Arquivo**: [Restaurant-API.postman_collection.json](/docs/postman/Restaurant-API.postman_collection.json)
 
 **Localização**: `docs/postman/Restaurant-API.postman_collection.json`
 
@@ -945,5 +948,5 @@ https://github.com/Equipe-3-FIAP-POS-GRAD-ARC-JAVA/tech-challenge-fase-02
 # 9. Vídeo Explicativo da API
 
 Vídeo explicativo detalhando a API, suas funcionalidades e como utilizá-la está disponível em:
-https://youtu.be/Atualizar_apos_subir_gravação
+https://youtu.be/link-do-video
 
