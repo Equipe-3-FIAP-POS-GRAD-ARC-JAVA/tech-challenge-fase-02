@@ -931,7 +931,7 @@ A collection do Postman contém todos os endpoints da API com exemplos de requis
 
 Documentação interativa da API com possibilidade de testar endpoints diretamente no navegador.
 
-**URL**: http://localhost:8080/swagger-ui
+**URL**: http://localhost:8080/swagger-ui/index.html
 
 ### Recursos Disponíveis:
 - Documentação completa de todos os endpoints
@@ -948,5 +948,5 @@ https://github.com/Equipe-3-FIAP-POS-GRAD-ARC-JAVA/tech-challenge-fase-02
 # 9. Vídeo Explicativo da API
 
 Vídeo explicativo detalhando a API, suas funcionalidades e como utilizá-la está disponível em:
-https://youtu.be/link-do-video
+**URL**: https://youtu.be/JeFPzV19lRw
 
