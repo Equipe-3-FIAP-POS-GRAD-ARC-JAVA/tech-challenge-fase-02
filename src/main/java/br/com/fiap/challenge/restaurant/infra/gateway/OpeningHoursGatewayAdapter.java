@@ -53,7 +53,7 @@ public class OpeningHoursGatewayAdapter implements OpeningHoursGateway {
                 .orElseThrow(() -> new RuntimeException("Restaurant not found"));
 
         entity.setRestaurant(restaurant);
-        entity.setWeekday(input.weekda());
+        entity.setWeekday(input.weekDay());
         entity.setOpensAt(input.opensAt());
         entity.setClosesAt(input.closesAt());
         entity.setClosed(input.isClosed());
