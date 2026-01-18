@@ -52,8 +52,8 @@ Essa fase expande o sistema ao incluir a gestão dos tipos de usuários, cadastr
 ### RNF04: Infraestrutura
 - Arquivo docker-compose.yml configurado para subir a aplicação Java e o banco de dados.
 
-### RNF05: Arquitetura
-- Organizar o código em camadas (Domain, Application, Infrastructure) seguindo Clean Architecture.
+### RNF05: Arquitetura Limpa
+- Implementar Clean Architecture com separação clara entre camadas Core (regras de negócio independentes de framework) e Infra (adaptações para frameworks externos).
 
 ### RNF06: Repositório
 - Repositório de código aberto (GitHub, GitLab) para acesso aos professores.
@@ -61,11 +61,9 @@ Essa fase expande o sistema ao incluir a gestão dos tipos de usuários, cadastr
 ### RNF07: Testes de API
 - Collections do Postman ou similar para testar os endpoints da API.
 
-### RNF08: Apresentação
-- Vídeo de aproximadamente 5 minutos apresentando as funcionalidades e o projeto em execução.
-
 ### Commit Message Guidelines
-Sempre gere mensagens de commit em inglês seguindo a especificação Conventional Commits:
+Nunca commitar código sem revisão humana. Todos os commits devem ser revisados por pelo menos um desenvolvedor antes de serem enviados ao repositório.
+Sempre gere mensagens de commit em inglês e comitar os arquivos em grupos lógicos seguindo a especificação Conventional Commits:
 
 **Formato**
 ```

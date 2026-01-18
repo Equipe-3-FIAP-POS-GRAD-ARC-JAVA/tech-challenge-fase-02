@@ -1,0 +1,41 @@
+# Build artifacts
+target/
+*.jar
+*.war
+*.ear
+*.class
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.settings/
+.classpath
+.project
+
+# Version control
+.git/
+.gitignore
+.gitattributes
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test reports
+*.log
+*.exec
+
+# Documentation (not needed in container)
+docs/
+README.md
+HELP.md
+
+# Maven wrapper (using system maven in Dockerfile)
+.mvn/
+
+# Environment files
+.env
+.env.local
