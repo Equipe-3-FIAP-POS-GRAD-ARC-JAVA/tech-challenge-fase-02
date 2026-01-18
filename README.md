@@ -39,7 +39,7 @@ A camada Infra é responsável por adaptar as regras de negócio para funcionar 
 
 O banco de dados foi modelado para suportar as funcionalidades do sistema, incluindo tabelas para usuários, restaurantes e cardápios.
 
-![Modelagem do Banco de Dados](./ddl.png)
+![Modelagem do Banco de Dados](/docs/ddl.png)
 
 ```sql
 CREATE TABLE public.food_types (
